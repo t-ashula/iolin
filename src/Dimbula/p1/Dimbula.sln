@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "p1", "p1.csproj", "{77706635-4245-4769-A553-A0291326E09A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncDataTests", "SyncDataTests\SyncDataTests.csproj", "{3DC651D1-7DA6-4A20-8EAB-1B534077972A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77706635-4245-4769-A553-A0291326E09A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77706635-4245-4769-A553-A0291326E09A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77706635-4245-4769-A553-A0291326E09A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77706635-4245-4769-A553-A0291326E09A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DC651D1-7DA6-4A20-8EAB-1B534077972A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DC651D1-7DA6-4A20-8EAB-1B534077972A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DC651D1-7DA6-4A20-8EAB-1B534077972A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DC651D1-7DA6-4A20-8EAB-1B534077972A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

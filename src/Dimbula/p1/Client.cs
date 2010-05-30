@@ -30,15 +30,20 @@ namespace OperaLink
     private TypedHistoryManager typeds_;
     private SpeedDialManager sds_;
     private SearchEngineManager ses_;
+    private NoteManager notes_;
 
     public IEnumerable<TypedHistory> TypedHistories { get { return typeds_.Items; } }
     public IEnumerable<SearchEngine> SearchEngines { get { return ses_.Items; } }
+    public IEnumerable<SpeedDial> SpeedDials { get { return sds_.Items; } }
+    public IEnumerable<Note> Notes { get { return notes_.Items; } }
 
     public Client(OperaLink.Configs conf)
     {
       conf_ = conf;
       typeds_ = new TypedHistoryManager();
       ses_ = new SearchEngineManager();
+      sds_ = new SpeedDialManager();
+      notes_ = new NoteManager();
       xml_settings_ = new XmlWriterSettings
       {
         Encoding = System.Text.Encoding.UTF8,
@@ -116,29 +121,33 @@ namespace OperaLink
       }
 
       //return resXml.IndexOf("Login successful") != -1;
-      System.Diagnostics.Debug.WriteLine(string.Format("{0}:{1}", "token", token_));
-      System.Diagnostics.Debug.WriteLine(string.Format("{0}:{1}", "message", msg));
-      System.Diagnostics.Debug.WriteLine(string.Format("{0}:{1}", "code", code));
+      OperaLink.Utils.ODS(string.Format("{0}:{1}", "token", token_));
+      OperaLink.Utils.ODS(string.Format("{0}:{1}", "message", msg));
+      OperaLink.Utils.ODS(string.Format("{0}:{1}", "code", code));
       return code == 200;
     }
 
+    /* <?xml version="1.0" encoding="utf-8"?>
+     * <link user="', $user, '" password="', $pass, '" syncstate="', $state ,'" dirty="0" version="1.0" xmlns="http://xmlns.opera.com/2006/link">
+     * <clientinfo>
+     * <supports>bookmark</supports>
+     * <supports>speeddial</supports>
+     * <supports>note</supports>
+     * <supports target="desktop">search_engine</supports>
+     * <supports>typed_history</supports>
+     * <build>3315</build>
+     * <system>win32</system>
+     * </clientinfo>
+     * <data/>
+     * </link>
+     */
     private string createLinkXml()
     {
-      /* <?xml version="1.0" encoding="utf-8"?>
-       * <link user="', $user, '" password="', $pass, '" syncstate="', $state ,'" dirty="0" version="1.0" xmlns="http://xmlns.opera.com/2006/link">
-       * <clientinfo>
-       * <supports>bookmark</supports>
-       * <supports>speeddial</supports>
-       * <supports>note</supports>
-       * <supports target="desktop">search_engine</supports>
-       * <supports>typed_history</supports>
-       * <build>3315</build>
-       * <system>win32</system>
-       * </clientinfo>
-       * <data/>
-       * </link>
-       */
       var x = "";
+      var s_th = false;
+      var s_se = false;
+      var s_sd = false;
+      var s_note = true;
       using (var ms = new MemoryStream())
       {
         using (var xw = XmlWriter.Create(ms))
@@ -151,11 +160,22 @@ namespace OperaLink
           xw.WriteAttributeString("syncstate", sync_state_.ToString());
           xw.WriteAttributeString("dirty", "0");
           xw.WriteStartElement("clientinfo");
-          //xw.WriteStartElement("supports"); xw.WriteString("typed_history"); xw.WriteEndElement();
-          xw.WriteStartElement("supports");
-          xw.WriteAttributeString("target", "desktop");
-          xw.WriteString("search_engine"); 
-          xw.WriteEndElement();
+          if (s_th)
+          {
+            xw.WriteStartElement("supports"); xw.WriteString("typed_history"); xw.WriteEndElement();
+          }
+          if (s_se)
+          {
+            xw.WriteStartElement("supports"); xw.WriteAttributeString("target", "desktop"); xw.WriteString("search_engine"); xw.WriteEndElement();
+          }
+          if (s_sd)
+          {
+            xw.WriteStartElement("supports"); xw.WriteString("speeddial"); xw.WriteEndElement();
+          }
+          if (s_note)
+          {
+            xw.WriteStartElement("supports"); xw.WriteString("note"); xw.WriteEndElement();
+          }
           xw.WriteStartElement("build"); xw.WriteString("3374"); xw.WriteEndElement();
           xw.WriteStartElement("system"); xw.WriteString("win32"); xw.WriteEndElement();
           xw.WriteEndElement();
@@ -189,13 +209,14 @@ namespace OperaLink
       System.Diagnostics.Debug.WriteLine(lxml);
       try
       {
-        //var resXml = wc.UploadString(LINK_API, "POST", lxml);
         var res = wc.UploadData(LINK_API, "POST", enc.GetBytes(lxml));
         var resXml = enc.GetString(res);
         OperaLink.Utils.ODS(resXml);
         readServerInfo(resXml);
         typeds_.FromOperaLinkXml(resXml);
         ses_.FromOperaLinkXml(resXml);
+        sds_.FromOperaLinkXml(resXml);
+        notes_.FromOperaLinkXml(resXml);
         LastStatus = "Synced";
       }
       catch (WebException wex)

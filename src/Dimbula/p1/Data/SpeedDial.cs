@@ -11,13 +11,13 @@ namespace OperaLink.Data
 {
   public class SpeedDial
   {
-    public int Position;
-    public System.Drawing.Image Icon;
-    public string Title;
-    public Uri Uri;
-    public bool ReloadEnabled;
-    public bool ReloadOnlyIfExpired;
-    public Int64 ReloadInterval;
+    public int Position { get; set; }
+    public System.Drawing.Image Icon { get; set; }
+    public string Title { get; set; }
+    public Uri Uri { get; set; }
+    public bool ReloadEnabled { get; set; }
+    public bool ReloadOnlyIfExpired { get; set; }
+    public Int64 ReloadInterval { get; set; }
   }
 
   internal class SpeedDialContent : ISyncDataWrapper<SpeedDial>
@@ -36,25 +36,30 @@ namespace OperaLink.Data
     public override void FromOperaLinkXml(string xmlString)
     {
       var xd = new XmlDocument();
-      xd.LoadXml(xmlString);
+      xd.LoadXml(xmlString); var nsm = new XmlNamespaceManager(xd.NameTable);
+      nsm.AddNamespace("oplink", "http://xmlns.opera.com/2006/link");
       var t = xd.GetElementsByTagName("speeddial")[0];
 
       Content = new SpeedDial
       {
-        Title = t.SelectSingleNode("//title").Value,
-        Uri = new Uri(t.SelectSingleNode("//uri").Value),
+        Title = t.SelectSingleNode("//oplink:title", nsm).InnerText,
         Position = Convert.ToInt32(t.Attributes["position"].Value),
-        ReloadEnabled = t.SelectSingleNode("//reload_enabled").Value == "1",
-        ReloadOnlyIfExpired = t.SelectSingleNode("//reload_only_if_expired").Value == "1",
-        ReloadInterval = Convert.ToInt64(t.SelectSingleNode("//reload_interval").Value),
+        ReloadEnabled = t.SelectSingleNode("//oplink:reload_enabled", nsm).InnerText == "1",
+        ReloadOnlyIfExpired = t.SelectSingleNode("//oplink:reload_only_if_expired", nsm).InnerText == "1",
+        ReloadInterval = Convert.ToInt64(t.SelectSingleNode("//oplink:reload_interval", nsm).InnerText),
       };
+      var uri = t.SelectSingleNode("//oplink:uri", nsm).InnerText;
+      if (!string.IsNullOrEmpty(uri))
+      {
+        Content.Uri = new Uri(uri);
+      }
       try
       {
-        Content.Icon = Image.FromStream(new MemoryStream(Convert.FromBase64String(t.SelectSingleNode("//icon").Value)));
+        Content.Icon = Image.FromStream(new MemoryStream(Convert.FromBase64String(t.SelectSingleNode("//oplink:icon", nsm).InnerText)));
       }
       catch (System.Exception ex)
       {
-        Utils.ODS(ex.StackTrace);
+        Utils.ODS(ex.Message);
       }
       State = Utils.StringToState(t.Attributes["status"].Value);
     }

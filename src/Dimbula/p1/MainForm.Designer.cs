@@ -32,9 +32,9 @@
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.configCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.syncSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.quitQToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.syncSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.helpHToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.aboutAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -70,28 +70,28 @@
       // configCToolStripMenuItem
       // 
       this.configCToolStripMenuItem.Name = "configCToolStripMenuItem";
-      this.configCToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.configCToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
       this.configCToolStripMenuItem.Text = "Config(&C)";
       this.configCToolStripMenuItem.Click += new System.EventHandler(this.configCToolStripMenuItem_Click);
-      // 
-      // toolStripSeparator1
-      // 
-      this.toolStripSeparator1.Name = "toolStripSeparator1";
-      this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
-      // 
-      // quitQToolStripMenuItem
-      // 
-      this.quitQToolStripMenuItem.Name = "quitQToolStripMenuItem";
-      this.quitQToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-      this.quitQToolStripMenuItem.Text = "Quit(&Q)";
-      this.quitQToolStripMenuItem.Click += new System.EventHandler(this.quitQToolStripMenuItem_Click);
       // 
       // syncSToolStripMenuItem
       // 
       this.syncSToolStripMenuItem.Name = "syncSToolStripMenuItem";
-      this.syncSToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.syncSToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
       this.syncSToolStripMenuItem.Text = "Sync(&S)";
       this.syncSToolStripMenuItem.Click += new System.EventHandler(this.syncSToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator1
+      // 
+      this.toolStripSeparator1.Name = "toolStripSeparator1";
+      this.toolStripSeparator1.Size = new System.Drawing.Size(127, 6);
+      // 
+      // quitQToolStripMenuItem
+      // 
+      this.quitQToolStripMenuItem.Name = "quitQToolStripMenuItem";
+      this.quitQToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+      this.quitQToolStripMenuItem.Text = "Quit(&Q)";
+      this.quitQToolStripMenuItem.Click += new System.EventHandler(this.quitQToolStripMenuItem_Click);
       // 
       // helpHToolStripMenuItem
       // 
@@ -141,7 +141,7 @@
       this.Controls.Add(this.statusStrip1);
       this.Controls.Add(this.menuStrip1);
       this.Name = "MainForm";
-      this.Text = "dimbula";
+      this.Text = "iolin";
       this.menuStrip1.ResumeLayout(false);
       this.menuStrip1.PerformLayout();
       this.statusStrip1.ResumeLayout(false);

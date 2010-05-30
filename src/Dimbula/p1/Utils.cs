@@ -6,10 +6,17 @@ using OperaLink.Data;
 
 namespace OperaLink
 {
-  
+  static class ExGuid
+  {
+    public static String ToFlatString(this Guid g)
+    {
+      return g.ToString().Replace("-", "");
+    }
+  }
+
   static class ExDateTime
   {
-    public static String ToW3cDtfInUtc(this DateTime d)
+    public static String ToW3CDTFInUtc(this DateTime d)
     {
       return d.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
     }

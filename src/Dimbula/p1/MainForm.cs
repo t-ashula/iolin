@@ -24,15 +24,17 @@ namespace OperaLink
 
     private void initSyncPanels()
     {
-      var thtab = new OperaLink.Forms.TypedHistoryPanel(client_);
-      var tp = new TabPage(thtab.Title);
-      tp.Controls.Add(thtab);
-      this.tabControl1.TabPages.Add(tp);
+      addSyncPanel(new OperaLink.Forms.NotePanel(client_));
+      addSyncPanel(new OperaLink.Forms.TypedHistoryPanel(client_));
+      addSyncPanel(new OperaLink.Forms.SearchEnginePanel(client_));
+      addSyncPanel(new OperaLink.Forms.SpeedDialPanel(client_));
+     }
 
-      var setab = new OperaLink.Forms.SearchEnginePanel(client_);
-      tp = new TabPage(setab.Title);
-      tp.Controls.Add(setab);
-      this.tabControl1.TabPages.Add(tp);
+    private void addSyncPanel(ISyncPanel sp)
+    {
+      var tp = new TabPage(sp.Title);
+      tp.Controls.Add(sp);
+      tabControl1.TabPages.Add(tp);
     }
 
     private void quitQToolStripMenuItem_Click(object sender, EventArgs e)
@@ -87,6 +89,7 @@ namespace OperaLink
         MessageBox.Show(ex.StackTrace, ex.Message);
       }
     }
+
     private void UpdateTables()
     {
       for (int i = 0; i < tabControl1.TabPages.Count; ++i)

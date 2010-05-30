@@ -58,7 +58,7 @@ namespace OperaLink.Data
           "<typed_history status=\"{0}\" content=\"{1}\" type=\"{2}\"><last_typed>{3}</last_typed></typed_history>",
           Utils.StateToString(State),
           Utils.XmlEntitize(Content.Content),
-          State == SyncState.Added ? "text" : "selected", Content.LastTyped.ToW3cDtfInUtc());
+          State == SyncState.Added ? "text" : "selected", Content.LastTyped.ToW3CDTFInUtc());
     }
 
     public override void FromOperaLinkXml(string xmlString)

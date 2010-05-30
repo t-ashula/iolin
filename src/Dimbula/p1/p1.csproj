@@ -75,6 +75,12 @@
     <Compile Include="Forms\TypedHistoryPanel.Designer.cs">
       <DependentUpon>TypedHistoryPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SearchEnginePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\SearchEnginePanel.Designer.cs">
+      <DependentUpon>SearchEnginePanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Configs.cs" />
@@ -94,6 +100,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TypedHistoryPanel.resx">
       <DependentUpon>TypedHistoryPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SearchEnginePanel.resx">
+      <DependentUpon>SearchEnginePanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

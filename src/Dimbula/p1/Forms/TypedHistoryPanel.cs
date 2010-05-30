@@ -16,7 +16,7 @@ namespace OperaLink.Forms
     {
       var items = client_.TypedHistories;
       System.Diagnostics.Debug.WriteLine(items.Count());
-      this.TypedHistoryList.Items.Clear();
+      TypedHistoryList.Items.Clear();
       TypedHistoryList.Items.AddRange(
         items.Select(i => new ListViewItem(new string[] {
           i.LastTyped.ToW3cDtfInUtc(), i.Type, i.Content })).ToArray());

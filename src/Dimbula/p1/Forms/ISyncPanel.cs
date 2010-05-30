@@ -11,9 +11,13 @@ namespace OperaLink.Forms
 {
   public partial class ISyncPanel : UserControl
   {
-    public ISyncPanel(OperaLink.Client c, String name)
+    public ISyncPanel()
     {
       InitializeComponent();
+    }
+
+    public ISyncPanel(OperaLink.Client c, String name) : this()
+    {
       Title = name;
       client_ = c;
     }

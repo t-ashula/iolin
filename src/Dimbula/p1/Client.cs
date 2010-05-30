@@ -29,13 +29,16 @@ namespace OperaLink
     private XmlWriterSettings xml_settings_;
     private TypedHistoryManager typeds_;
     private SpeedDialManager sds_;
+    private SearchEngineManager ses_;
 
     public IEnumerable<TypedHistory> TypedHistories { get { return typeds_.Items; } }
+    public IEnumerable<SearchEngine> SearchEngines { get { return ses_.Items; } }
 
     public Client(OperaLink.Configs conf)
     {
       conf_ = conf;
       typeds_ = new TypedHistoryManager();
+      ses_ = new SearchEngineManager();
       xml_settings_ = new XmlWriterSettings
       {
         Encoding = System.Text.Encoding.UTF8,
@@ -83,6 +86,7 @@ namespace OperaLink
       var enc = Encoding.GetEncoding("utf-8");
       var wc = new WebClient();
       wc.Headers["User-Agent"] = conf_.UserAgent;
+      var loginxml = createLoginXml(); OperaLink.Utils.ODS(loginxml);
       var res = wc.UploadData(LOGIN_API, "POST", enc.GetBytes(createLoginXml()));
       var resXml = enc.GetString(res);
       System.Diagnostics.Debug.WriteLine(resXml);
@@ -147,7 +151,11 @@ namespace OperaLink
           xw.WriteAttributeString("syncstate", sync_state_.ToString());
           xw.WriteAttributeString("dirty", "0");
           xw.WriteStartElement("clientinfo");
-          xw.WriteStartElement("supports"); xw.WriteString("typed_history"); xw.WriteEndElement();
+          //xw.WriteStartElement("supports"); xw.WriteString("typed_history"); xw.WriteEndElement();
+          xw.WriteStartElement("supports");
+          xw.WriteAttributeString("target", "desktop");
+          xw.WriteString("search_engine"); 
+          xw.WriteEndElement();
           xw.WriteStartElement("build"); xw.WriteString("3374"); xw.WriteEndElement();
           xw.WriteStartElement("system"); xw.WriteString("win32"); xw.WriteEndElement();
           xw.WriteEndElement();
@@ -184,9 +192,10 @@ namespace OperaLink
         //var resXml = wc.UploadString(LINK_API, "POST", lxml);
         var res = wc.UploadData(LINK_API, "POST", enc.GetBytes(lxml));
         var resXml = enc.GetString(res);
-        System.Diagnostics.Debug.WriteLine(resXml);
+        OperaLink.Utils.ODS(resXml);
         readServerInfo(resXml);
         typeds_.FromOperaLinkXml(resXml);
+        ses_.FromOperaLinkXml(resXml);
         LastStatus = "Synced";
       }
       catch (WebException wex)

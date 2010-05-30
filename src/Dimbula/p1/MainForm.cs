@@ -20,7 +20,6 @@ namespace OperaLink
       client_ = new Client(configs_);
       initSyncPanels();
       toolStripStatusLabel1.Text = client_.LastStatus;
-      //initTypedHistriesTab();
     }
 
     private void initSyncPanels()
@@ -28,6 +27,11 @@ namespace OperaLink
       var thtab = new OperaLink.Forms.TypedHistoryPanel(client_);
       var tp = new TabPage(thtab.Title);
       tp.Controls.Add(thtab);
+      this.tabControl1.TabPages.Add(tp);
+
+      var setab = new OperaLink.Forms.SearchEnginePanel(client_);
+      tp = new TabPage(setab.Title);
+      tp.Controls.Add(setab);
       this.tabControl1.TabPages.Add(tp);
     }
 

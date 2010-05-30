@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using System.Xml;
 using System.IO;
+using System.Xml.Linq;
 
 namespace OperaLink.Data
 {
@@ -44,27 +45,40 @@ namespace OperaLink.Data
     {
       var xd = new XmlDocument();
       xd.LoadXml(xmlString);
+      var nsm = new XmlNamespaceManager(xd.NameTable);
+      nsm.AddNamespace("oplink", "http://xmlns.opera.com/2006/link");
       var t = xd.GetElementsByTagName("search_engine")[0];
+      OperaLink.Utils.ODS(t.OuterXml);
 
-      Content = new SearchEngine
+      Content = new SearchEngine();
+      Content.Uuid = new Guid(t.Attributes["id"].Value);
+      Content.Type = StringToSEType(t.Attributes["type"].Value);
+      Content.Group = StringToSEGroup(t.SelectSingleNode("//oplink:group", nsm).FirstChild.Value);
+      Content.IsPost = t.SelectSingleNode("//oplink:is_post", nsm).FirstChild.Value != "0";
+      Content.PersonalBarPos = System.Convert.ToInt32(t.SelectSingleNode("//oplink:personal_bar_pos", nsm).FirstChild.Value);
+      Content.ShowInPersonal = t.SelectSingleNode("//oplink:show_in_personal_bar", nsm).FirstChild.Value != "0";
+      Content.Title = t.SelectSingleNode("//oplink:title", nsm).InnerText;
+      if (!String.IsNullOrEmpty(t.SelectSingleNode("//oplink:uri", nsm).InnerText))
       {
-        Uuid = new Guid(t.Attributes["id"].Value),
-        Type = StringToSEType(t.Attributes["type"].Value),
-        Group = StringToSEGroup(t.SelectSingleNode("//group").Value),
-        Deleted = t.SelectSingleNode("//hidden").Value != "0",
-        IsPost = t.SelectSingleNode("//is_post").Value != "0",
-        PersonalBarPos = System.Convert.ToInt32(t.SelectSingleNode("//personal_bar_pos").Value),
-        ShowInPersonal = t.SelectSingleNode("//show_in_personal_bar").Value != "0",
-        Title = t.SelectSingleNode("//title").Value,
-        Uri = new Uri(t.SelectSingleNode("//uri").Value),
-        Key = t.SelectSingleNode("//key").Value,
-        Encoding = t.SelectSingleNode("//encoding").Value,
-        PostQuery = t.SelectSingleNode("//post_query").Value,
-      };
+        Content.Uri = new Uri(t.SelectSingleNode("//oplink:uri", nsm).InnerText);
+      }
+      Content.Key = t.SelectSingleNode("//oplink:key", nsm).InnerText;
+      Content.Encoding = t.SelectSingleNode("//oplink:encoding", nsm).InnerText;
+      if (Content.IsPost)
+      {
+        Content.PostQuery = t.SelectSingleNode("//oplink:post_query", nsm).InnerText;
+      }
+      var h = t.SelectSingleNode("//oplink:hidden", nsm);
+      if (h != null)
+      {
+        Content.Deleted = h.FirstChild.Value != "0";
+      }
+
       try
       {
-        Content.Icon = Image.FromStream(new MemoryStream(Convert.FromBase64String(t.SelectSingleNode("//icon").Value)));
+        Content.Icon = Image.FromStream(new MemoryStream(Convert.FromBase64String(t.SelectSingleNode("//oplink:icon", nsm).FirstChild.Value)));
       }
+
       catch (System.Exception ex)
       {
         Utils.ODS(ex.StackTrace);
@@ -96,7 +110,7 @@ namespace OperaLink.Data
     {
       return
         g == SearchEngine.SEGroup.DesktopDefault ? "desktop_default" :
-        g == SearchEngine.SEGroup.Custome ? "custome" : "custome";
+        g == SearchEngine.SEGroup.Custome ? "custom" : "custom";
     }
     
     private SearchEngine.SEGroup StringToSEGroup(string s)
@@ -107,7 +121,7 @@ namespace OperaLink.Data
       }
       return
         s == "desktop_default" ? SearchEngine.SEGroup.DesktopDefault :
-        s == "custome" ? SearchEngine.SEGroup.Custome : SearchEngine.SEGroup.Custome;
+        s == "custom" ? SearchEngine.SEGroup.Custome : SearchEngine.SEGroup.Custome;
     }
     
     public override string ToOperaLinkXml()

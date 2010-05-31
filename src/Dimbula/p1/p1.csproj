@@ -93,6 +93,12 @@
     <Compile Include="Forms\NotePanel.Designer.cs">
       <DependentUpon>NotePanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BookmarkPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\BookmarkPanel.Designer.cs">
+      <DependentUpon>BookmarkPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Configs.cs" />
@@ -121,6 +127,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NotePanel.resx">
       <DependentUpon>NotePanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BookmarkPanel.resx">
+      <DependentUpon>BookmarkPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

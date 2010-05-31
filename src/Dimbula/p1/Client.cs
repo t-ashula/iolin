@@ -31,11 +31,13 @@ namespace OperaLink
     private SpeedDialManager sds_;
     private SearchEngineManager ses_;
     private NoteManager notes_;
+    private BookmarkManager bms_;
 
     public IEnumerable<TypedHistory> TypedHistories { get { return typeds_.Items; } }
     public IEnumerable<SearchEngine> SearchEngines { get { return ses_.Items; } }
     public IEnumerable<SpeedDial> SpeedDials { get { return sds_.Items; } }
     public IEnumerable<Note> Notes { get { return notes_.Items; } }
+    public IEnumerable<Bookmark> Bookmarks { get { return bms_.Items; } }
 
     public Client(OperaLink.Configs conf)
     {
@@ -44,6 +46,7 @@ namespace OperaLink
       ses_ = new SearchEngineManager();
       sds_ = new SpeedDialManager();
       notes_ = new NoteManager();
+      bms_ = new BookmarkManager();
       xml_settings_ = new XmlWriterSettings
       {
         Encoding = System.Text.Encoding.UTF8,
@@ -144,10 +147,12 @@ namespace OperaLink
     private string createLinkXml()
     {
       var x = "";
-      var s_th = false;
-      var s_se = false;
-      var s_sd = false;
-      var s_note = true;
+      var supports = new Dictionary<string, bool>();
+      supports["typed_history"] = false;
+      supports["search_engine"] = false;
+      supports["speeddial"] = false;
+      supports["note"] = false;
+      supports["bookmark"] = true;
       using (var ms = new MemoryStream())
       {
         using (var xw = XmlWriter.Create(ms))
@@ -160,21 +165,18 @@ namespace OperaLink
           xw.WriteAttributeString("syncstate", sync_state_.ToString());
           xw.WriteAttributeString("dirty", "0");
           xw.WriteStartElement("clientinfo");
-          if (s_th)
+          foreach (var i in (new []{ "typed_history", "search_engine", "speeddial", "note", "bookmark" }))
           {
-            xw.WriteStartElement("supports"); xw.WriteString("typed_history"); xw.WriteEndElement();
-          }
-          if (s_se)
-          {
-            xw.WriteStartElement("supports"); xw.WriteAttributeString("target", "desktop"); xw.WriteString("search_engine"); xw.WriteEndElement();
-          }
-          if (s_sd)
-          {
-            xw.WriteStartElement("supports"); xw.WriteString("speeddial"); xw.WriteEndElement();
-          }
-          if (s_note)
-          {
-            xw.WriteStartElement("supports"); xw.WriteString("note"); xw.WriteEndElement();
+            if (supports[i])
+            {
+              xw.WriteStartElement("supports");
+              if (i == "search_engine")
+              {
+                xw.WriteAttributeString("target", "desktop");
+              }
+              xw.WriteString(i); 
+              xw.WriteEndElement();
+            }
           }
           xw.WriteStartElement("build"); xw.WriteString("3374"); xw.WriteEndElement();
           xw.WriteStartElement("system"); xw.WriteString("win32"); xw.WriteEndElement();
@@ -217,6 +219,7 @@ namespace OperaLink
         ses_.FromOperaLinkXml(resXml);
         sds_.FromOperaLinkXml(resXml);
         notes_.FromOperaLinkXml(resXml);
+        bms_.FromOperaLinkXml(resXml);
         LastStatus = "Synced";
       }
       catch (WebException wex)

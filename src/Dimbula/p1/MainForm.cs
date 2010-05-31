@@ -24,6 +24,7 @@ namespace OperaLink
 
     private void initSyncPanels()
     {
+      addSyncPanel(new OperaLink.Forms.BookmarkPanel(client_));
       addSyncPanel(new OperaLink.Forms.NotePanel(client_));
       addSyncPanel(new OperaLink.Forms.TypedHistoryPanel(client_));
       addSyncPanel(new OperaLink.Forms.SearchEnginePanel(client_));
@@ -44,7 +45,7 @@ namespace OperaLink
 
     private void aboutAToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      (new OperaLink.AboutBox()).Show();
+      (new OperaLink.AboutBox()).ShowDialog();
     }
 
     private OperaLink.Configs configs_;

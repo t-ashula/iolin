@@ -28,10 +28,14 @@
     /// </summary>
     private void InitializeComponent()
     {
+      this.components = new System.ComponentModel.Container();
       this.TypedHistoryList = new System.Windows.Forms.ListView();
       this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
       this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
       this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+      this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.deleteDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.contextMenuStrip1.SuspendLayout();
       this.SuspendLayout();
       // 
       // TypedHistoryList
@@ -40,7 +44,9 @@
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
+      this.TypedHistoryList.ContextMenuStrip = this.contextMenuStrip1;
       this.TypedHistoryList.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.TypedHistoryList.FullRowSelect = true;
       this.TypedHistoryList.Location = new System.Drawing.Point(0, 0);
       this.TypedHistoryList.Name = "TypedHistoryList";
       this.TypedHistoryList.Size = new System.Drawing.Size(454, 327);
@@ -62,6 +68,20 @@
       this.columnHeader3.Text = "Content";
       this.columnHeader3.Width = 282;
       // 
+      // contextMenuStrip1
+      // 
+      this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteDToolStripMenuItem});
+      this.contextMenuStrip1.Name = "contextMenuStrip1";
+      this.contextMenuStrip1.Size = new System.Drawing.Size(134, 26);
+      // 
+      // deleteDToolStripMenuItem
+      // 
+      this.deleteDToolStripMenuItem.Name = "deleteDToolStripMenuItem";
+      this.deleteDToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+      this.deleteDToolStripMenuItem.Text = "Delete(&D)";
+      this.deleteDToolStripMenuItem.Click += new System.EventHandler(this.deleteDToolStripMenuItem_Click);
+      // 
       // TypedHistoryPanel
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -69,6 +89,7 @@
       this.Controls.Add(this.TypedHistoryList);
       this.Name = "TypedHistoryPanel";
       this.Size = new System.Drawing.Size(454, 327);
+      this.contextMenuStrip1.ResumeLayout(false);
       this.ResumeLayout(false);
 
     }
@@ -79,5 +100,7 @@
     private System.Windows.Forms.ColumnHeader columnHeader1;
     private System.Windows.Forms.ColumnHeader columnHeader2;
     private System.Windows.Forms.ColumnHeader columnHeader3;
+    private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+    private System.Windows.Forms.ToolStripMenuItem deleteDToolStripMenuItem;
   }
 }

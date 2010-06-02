@@ -28,7 +28,7 @@ namespace OperaLink.Data
     public Image Icon { get; set; }
   }
  
-  internal class SearchEngineWrapper : ISyncDataWrapper<SearchEngine>
+  public class SearchEngineWrapper : ISyncDataWrapper<SearchEngine>
   {
     public SearchEngineWrapper()
     {
@@ -192,7 +192,7 @@ namespace OperaLink.Data
     } 
   }
 
-  public class SearchEngineManager : ISyncDataManager<SearchEngine>
+  public class SearchEngineManager : ISyncDataManager<SearchEngine, SearchEngineWrapper>
   {
     public SearchEngineManager()
     {

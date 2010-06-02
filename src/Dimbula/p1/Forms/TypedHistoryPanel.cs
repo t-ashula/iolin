@@ -15,11 +15,24 @@ namespace OperaLink.Forms
     public override void UpdateSyncItems()
     {
       var items = client_.TypedHistories;
-      System.Diagnostics.Debug.WriteLine(items.Count());
+      OperaLink.Utils.ODS(items.Count().ToString());
       TypedHistoryList.Items.Clear();
       TypedHistoryList.Items.AddRange(
-        items.Select(i => new ListViewItem(new string[] {
-          i.LastTyped.ToW3CDTFInUtc(), i.Type, i.Content })).ToArray());
+        items.Select(i => new ListViewItem(new string[] { i.LastTyped.ToW3CDTFInUtc(), i.Type, i.Content }) { Tag = i }).ToArray());
+    }
+
+    private void deleteDToolStripMenuItem_Click(object sender, System.EventArgs e)
+    {
+      DeleteSelectedItems();
+      UpdateSyncItems();
+    }
+
+    private void DeleteSelectedItems()
+    {
+      TypedHistoryList
+        .SelectedItems.OfType<ListViewItem>()
+        .Select(i => (OperaLink.Data.TypedHistory)i.Tag).ToList()
+        .ForEach(i => client_.DelTypedHistory(i));
     }
   }
 }

@@ -16,6 +16,7 @@ namespace OperaLink.Data
   /// <typeparam name="ContentData"></typeparam>
   public class ISyncDataWrapper<ContentData>
   {
+    public ISyncDataWrapper() { }
     /// <summary>
     /// Data content
     /// </summary>
@@ -44,47 +45,48 @@ namespace OperaLink.Data
     /// modify content from other instance
     /// </summary>
     /// <param name="other">other instance</param>
-    public virtual void ModContent(ISyncDataWrapper<ContentData> other){/* nothing */}
+    public virtual void ModContent(ISyncDataWrapper<ContentData> other) { /* nothing */ }
   }
 
   /// <summary>
   /// OperaLink data manager
   /// </summary>
   /// <typeparam name="ContentData">Data type</typeparam>
-  public class ISyncDataManager<ContentData>
+  public class ISyncDataManager<ContentData, Deriv>
+    where Deriv : ISyncDataWrapper<ContentData>, new()
   {
-    private List<ISyncDataWrapper<ContentData>> inner_items_;
-    private List<ISyncDataWrapper<ContentData>> to_sync_items_;
+    protected List<Deriv> inner_items_;
+    protected List<Deriv> to_sync_items_;
 
     /// <summary>
     /// ctor.
     /// </summary>
     public ISyncDataManager()
     {
-      inner_items_ = new List<ISyncDataWrapper<ContentData>>();
-      to_sync_items_ = new List<ISyncDataWrapper<ContentData>>();
+      inner_items_ = new List<Deriv>();
+      to_sync_items_ = new List<Deriv>();
     }
 
     /// <summary>
     /// create xml string to sync OperaLink 
     /// </summary>
     /// <returns>OperaLink xml string</returns>
-    public string ToOperaLinkXml()
+    public virtual string ToOperaLinkXml()
     {
       return to_sync_items_.Aggregate("", (x, i) => x + i.ToOperaLinkXml());
     }
-
+    
     /// <summary>
     /// update internal list from OperaLink 
     /// </summary>
     /// <param name="xmlString">xml string from OperaLink server containes 0 or more elements</param>
-    public virtual void FromOperaLinkXml(string xmlString) { }
+    public virtual void FromOperaLinkXml(string xmlString) {}
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="d"></param>
-    protected void ChangeInnerList(ISyncDataWrapper<ContentData> d)
+    protected void ChangeInnerList(Deriv d)
     {
       switch (d.State)
       {
@@ -101,7 +103,7 @@ namespace OperaLink.Data
     /// <returns>list items count.</returns>
     public int Add(ContentData d)
     {
-      var item = new ISyncDataWrapper<ContentData>
+      var item = new Deriv
       {
         Content = d,
         State = SyncState.Added
@@ -112,7 +114,8 @@ namespace OperaLink.Data
       }
       return inner_items_.Count;
     }
-    private bool addItem(ISyncDataWrapper<ContentData> d)
+
+    private bool addItem(Deriv d)
     {
       if (inner_items_.Exists(i => i.IsSameContent(d)))
       {
@@ -121,7 +124,7 @@ namespace OperaLink.Data
       inner_items_.Add(d);
       return true;
     }
-    private bool addSyncItem(ISyncDataWrapper<ContentData> d)
+    private bool addSyncItem(Deriv d)
     {
       to_sync_items_.Add(d);
       return true;
@@ -134,7 +137,7 @@ namespace OperaLink.Data
     /// <returns>list items count</returns>
     public int Mod(ContentData d)
     {
-      var item = new ISyncDataWrapper<ContentData>
+      var item = new Deriv
       {
         State = SyncState.Modified,
         Content = d
@@ -143,7 +146,7 @@ namespace OperaLink.Data
       modSyncItem(item);
       return inner_items_.Count;
     }
-    private bool modItem(ISyncDataWrapper<ContentData> d)
+    private bool modItem(Deriv d)
     {
       var idx = inner_items_.FindIndex(i => i.IsSameContent(d));
       if (idx < 0)
@@ -153,7 +156,7 @@ namespace OperaLink.Data
       inner_items_[idx].ModContent(d);
       return true;
     }
-    private bool modSyncItem(ISyncDataWrapper<ContentData> d)
+    private bool modSyncItem(Deriv d)
     {
       var idx = to_sync_items_.FindIndex(i => i.IsSameContent(d));
       if (idx < 0)
@@ -175,8 +178,7 @@ namespace OperaLink.Data
     /// <returns>list items count</returns>
     public int Del(ContentData d)
     {
-      var item = new ISyncDataWrapper<ContentData>
-      {
+      var item = new Deriv      {
         State = SyncState.Deleted,
         Content = d
       };
@@ -186,7 +188,7 @@ namespace OperaLink.Data
       }
       return inner_items_.Count;
     }
-    private bool delItem(ISyncDataWrapper<ContentData> d)
+    private bool delItem(Deriv d)
     {
       var idx = inner_items_.ToList().FindIndex(i => i.IsSameContent(d));
       if (idx < 0)
@@ -196,7 +198,7 @@ namespace OperaLink.Data
       inner_items_.RemoveAt(idx);
       return true;
     }
-    private bool delSyncItem(ISyncDataWrapper<ContentData> d)
+    private bool delSyncItem(Deriv d)
     {
       var in_sync = to_sync_items_.FindIndex(i => i.IsSameContent(d));
       if (in_sync < 0)

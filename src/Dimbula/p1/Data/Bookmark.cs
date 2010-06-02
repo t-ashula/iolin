@@ -33,7 +33,7 @@ namespace OperaLink.Data
     public BookmarkType Type { get; set; }
   }
 
-  internal class BookmarkWrapper : ISyncDataWrapper<Bookmark>
+  public class BookmarkWrapper : ISyncDataWrapper<Bookmark>
   {
     public override bool IsSameContent(ISyncDataWrapper<Bookmark> other)
     {
@@ -169,7 +169,7 @@ namespace OperaLink.Data
     }
   }
 
-  public class BookmarkManager : ISyncDataManager<Bookmark>
+  public class BookmarkManager : ISyncDataManager<Bookmark,BookmarkWrapper>
   {
     public override void FromOperaLinkXml(string xmlString)
     {

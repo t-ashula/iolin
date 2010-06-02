@@ -24,12 +24,12 @@ namespace OperaLink
 
     private void initSyncPanels()
     {
-      addSyncPanel(new OperaLink.Forms.BookmarkPanel(client_));
-      addSyncPanel(new OperaLink.Forms.NotePanel(client_));
       addSyncPanel(new OperaLink.Forms.TypedHistoryPanel(client_));
-      addSyncPanel(new OperaLink.Forms.SearchEnginePanel(client_));
-      addSyncPanel(new OperaLink.Forms.SpeedDialPanel(client_));
-     }
+      // addSyncPanel(new OperaLink.Forms.BookmarkPanel(client_));
+      // addSyncPanel(new OperaLink.Forms.NotePanel(client_));
+      // addSyncPanel(new OperaLink.Forms.SearchEnginePanel(client_));
+      // addSyncPanel(new OperaLink.Forms.SpeedDialPanel(client_));
+    }
 
     private void addSyncPanel(ISyncPanel sp)
     {

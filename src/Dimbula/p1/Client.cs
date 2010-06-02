@@ -148,11 +148,11 @@ namespace OperaLink
     {
       var x = "";
       var supports = new Dictionary<string, bool>();
-      supports["typed_history"] = false;
+      supports["typed_history"] = true;
       supports["search_engine"] = false;
       supports["speeddial"] = false;
       supports["note"] = false;
-      supports["bookmark"] = true;
+      supports["bookmark"] = false;
       using (var ms = new MemoryStream())
       {
         using (var xw = XmlWriter.Create(ms))
@@ -162,10 +162,12 @@ namespace OperaLink
           xw.WriteAttributeString("version", "1.0");
           xw.WriteAttributeString("user", conf_.UserName);
           xw.WriteAttributeString("password", conf_.Password);
-          xw.WriteAttributeString("syncstate", sync_state_.ToString());
+          xw.WriteAttributeString("syncstate", (sync_state_).ToString());
           xw.WriteAttributeString("dirty", "0");
           xw.WriteStartElement("clientinfo");
-          foreach (var i in (new []{ "typed_history", "search_engine", "speeddial", "note", "bookmark" }))
+          xw.WriteStartElement("build"); xw.WriteString("3374"); xw.WriteEndElement();
+          xw.WriteStartElement("system"); xw.WriteString("win32"); xw.WriteEndElement();
+          foreach (var i in (new[] { "typed_history", "search_engine", "speeddial", "note", "bookmark" }))
           {
             if (supports[i])
             {
@@ -174,14 +176,13 @@ namespace OperaLink
               {
                 xw.WriteAttributeString("target", "desktop");
               }
-              xw.WriteString(i); 
+              xw.WriteString(i);
               xw.WriteEndElement();
             }
           }
-          xw.WriteStartElement("build"); xw.WriteString("3374"); xw.WriteEndElement();
-          xw.WriteStartElement("system"); xw.WriteString("win32"); xw.WriteEndElement();
           xw.WriteEndElement();
           xw.WriteStartElement("data");
+          xw.WriteRaw(typeds_.ToOperaLinkXml());
           xw.WriteEndElement();
           xw.WriteEndElement();
           xw.WriteEndDocument();
@@ -221,6 +222,7 @@ namespace OperaLink
         notes_.FromOperaLinkXml(resXml);
         bms_.FromOperaLinkXml(resXml);
         LastStatus = "Synced";
+        typeds_.SyncDone();
       }
       catch (WebException wex)
       {
@@ -272,21 +274,21 @@ namespace OperaLink
       }
     }
 
-    public void AddBookmark(OperaLink.Data.Bookmark d) { }
-    public void ModBookmark(OperaLink.Data.Bookmark d) { }
-    public void DelBookmark(OperaLink.Data.Bookmark d) { }
+    public void AddBookmark(OperaLink.Data.Bookmark d) { bms_.Add(d); }
+    public void ModBookmark(OperaLink.Data.Bookmark d) { bms_.Mod(d); }
+    public void DelBookmark(OperaLink.Data.Bookmark d) { bms_.Del(d); }
 
-    public void AddNote(OperaLink.Data.Note d) { }
-    public void ModNote(OperaLink.Data.Note d) { }
-    public void DelNote(OperaLink.Data.Note d) { }
+    public void AddNote(OperaLink.Data.Note d) { notes_.Add(d); }
+    public void ModNote(OperaLink.Data.Note d) { notes_.Mod(d); }
+    public void DelNote(OperaLink.Data.Note d) { notes_.Del(d); }
+    
+    public void AddSearchEngine(OperaLink.Data.SearchEngine d) { ses_.Add(d); }
+    public void ModSearchEngine(OperaLink.Data.SearchEngine d) { ses_.Mod(d); }
+    public void DelSearchEngine(OperaLink.Data.SearchEngine d) { ses_.Del(d); }
 
-    public void AddSearchEngine(OperaLink.Data.SearchEngine d) { }
-    public void ModSearchEngine(OperaLink.Data.SearchEngine d) { }
-    public void DelSearchEngine(OperaLink.Data.SearchEngine d) { }
-
-    public void AddSpeedDial(OperaLink.Data.SpeedDial d) { }
-    public void ModSpeedDial(OperaLink.Data.SpeedDial d) { }
-    public void DelSpeedDial(OperaLink.Data.SpeedDial d) { }
+    public void AddSpeedDial(OperaLink.Data.SpeedDial d) { sds_.Add(d); }
+    public void ModSpeedDial(OperaLink.Data.SpeedDial d) { sds_.Mod(d); }
+    public void DelSpeedDial(OperaLink.Data.SpeedDial d) { sds_.Del(d); }
 
     public void AddTypedHistory(TypedHistory d) { typeds_.Add(d); }
     public void ModTypedHistory(TypedHistory d) { typeds_.Mod(d); }

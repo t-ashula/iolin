@@ -20,7 +20,7 @@ namespace OperaLink.Data
     public Int64 ReloadInterval { get; set; }
   }
 
-  internal class SpeedDialContent : ISyncDataWrapper<SpeedDial>
+  public class SpeedDialContent : ISyncDataWrapper<SpeedDial>
   {
     public SpeedDialContent()
     {
@@ -98,7 +98,7 @@ namespace OperaLink.Data
 
   }
 
-  public class SpeedDialManager : ISyncDataManager<SpeedDial>
+  public class SpeedDialManager : ISyncDataManager<SpeedDial, SpeedDialContent>
   {
     public override void FromOperaLinkXml(string xmlString)
     {

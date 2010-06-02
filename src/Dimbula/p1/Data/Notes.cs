@@ -34,7 +34,7 @@ namespace OperaLink.Data
     public NoteType Type { get; set; }
   }
 
-  internal class NoteWrapper : ISyncDataWrapper<Note>
+  public class NoteWrapper : ISyncDataWrapper<Note>
   {
     public NoteWrapper()
     {
@@ -180,7 +180,7 @@ namespace OperaLink.Data
     }
   }
 
-  public class NoteManager : ISyncDataManager<Note>
+  public class NoteManager : ISyncDataManager<Note, NoteWrapper>
   {
     public NoteManager() { }
     public override void FromOperaLinkXml(string xmlString)

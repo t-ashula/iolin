@@ -37,7 +37,7 @@ namespace OperaLink.Data
     }
   }
 
-  internal class TypedHistoryWrapper : ISyncDataWrapper<TypedHistory>
+  public class TypedHistoryWrapper : ISyncDataWrapper<TypedHistory>
   {
     public TypedHistoryWrapper()
     {
@@ -63,7 +63,7 @@ namespace OperaLink.Data
 
     public override void FromOperaLinkXml(string xmlString)
     {
-      var xd = new XmlDocument();
+      var xd = new XmlDocument(); 
       xd.LoadXml(xmlString);
       var t = xd.GetElementsByTagName("typed_history")[0];
       Content = new TypedHistory
@@ -93,7 +93,7 @@ namespace OperaLink.Data
     }
   }
 
-  public class TypedHistoryManager : ISyncDataManager<TypedHistory>
+  public class TypedHistoryManager : ISyncDataManager<TypedHistory, TypedHistoryWrapper>
   {
     public override void FromOperaLinkXml(string xmlString)
     {

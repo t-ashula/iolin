@@ -37,7 +37,7 @@ namespace OperaLink.Data
     {
       var xd = new XmlDocument();
       xd.LoadXml(xmlString); var nsm = new XmlNamespaceManager(xd.NameTable);
-      nsm.AddNamespace("oplink", "http://xmlns.opera.com/2006/link");
+      nsm.AddNamespace("oplink", OperaLinkXmlNameSpaces.LINK_XML_NAME_SPACE);
       var t = xd.GetElementsByTagName("speeddial")[0];
 
       Content = new SpeedDial

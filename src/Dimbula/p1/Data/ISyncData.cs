@@ -11,11 +11,18 @@ namespace OperaLink.Data
   /// </summary>
   public enum SyncState { Added, Deleted, Modified };
 
+  public static class OperaLinkXmlNameSpaces
+  {
+    public const string LINK_XML_NAME_SPACE = "http://xmlns.opera.com/2006/link";
+    public const string AUTH_XML_NAME_SPACE = "http://xmlns.opera.com/2007/auth";
+  }
+
   /// <summary>
   /// 
   /// </summary>
   /// <typeparam name="ContentData"></typeparam>
-  public class ISyncDataWrapper<ContentData> : IEqualityComparer<ISyncDataWrapper<ContentData>>
+  public class ISyncDataWrapper<ContentData> 
+    : IEqualityComparer<ISyncDataWrapper<ContentData>>
   {
     public ISyncDataWrapper() { }
     /// <summary>
@@ -49,7 +56,7 @@ namespace OperaLink.Data
     public virtual void ModContent(ISyncDataWrapper<ContentData> other) { /* nothing */ }
 
 
-    #region IEqualityComparer<ISyncDataWrapper<ContentData>> メンバ
+    #region IEqualityComparer<ISyncDataWrapper<ContentData>> 
 
     public bool Equals(ISyncDataWrapper<ContentData> x, ISyncDataWrapper<ContentData> y)
     {

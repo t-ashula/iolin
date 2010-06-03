@@ -10,13 +10,10 @@ using OperaLink.Data;
 
 namespace OperaLink
 {
-  ///my $OPERA_UA_STRING = 'Opera/9.80 (Windows NT 6.0; U; en) Presto/2.5.24 Version/10.52';
-  ///my $LOGIN_API = 'https://auth.opera.com/xml';
-  ///my $LINK_API = 'https://link-server.opera.com/pull';
   /// <summary>
   /// 
   /// </summary>
-  public class Client
+  public partial class Client
   {
     private readonly string LOGIN_API = "https://auth.opera.com/xml";
     private readonly string LINK_API = "https://link-server.opera.com/pull";
@@ -26,7 +23,9 @@ namespace OperaLink
     private int short_interval_;
     private int long_interval_;
     private string token_;
+
     private XmlWriterSettings xml_settings_;
+    private Encoding enc_;
     private TypedHistoryManager typeds_;
     private SpeedDialManager sds_;
     private SearchEngineManager ses_;
@@ -38,6 +37,22 @@ namespace OperaLink
     public IEnumerable<SpeedDial> SpeedDials { get { return sds_.Items; } }
     public IEnumerable<Note> Notes { get { return notes_.Items; } }
     public IEnumerable<Bookmark> Bookmarks { get { return bms_.Items; } }
+
+    private string lastStatus_;
+    public string LastStatus
+    {
+      get { return lastStatus_; }
+      private set
+      {
+        if (value != lastStatus_)
+        {
+          lastStatus_ = value;
+          OnLastStatusChanged(new EventArgs());
+        }
+      }
+    }
+
+    public bool Logined { get { return !String.IsNullOrEmpty(this.token_); } }
 
     public Client(OperaLink.Configs conf)
     {
@@ -56,8 +71,18 @@ namespace OperaLink
       short_interval_ = 60;
       long_interval_ = 120;
       token_ = "";
+      LastStatus = "";
+      enc_ = Encoding.GetEncoding("utf-8");
     }
 
+
+    /*<?xml version="1.0" encoding="utf-8"?>
+     * <auth version="1.1" xmlns="http://xmlns.opera.com/2007/auth">
+     * <token>44c08bc467e30f70441876f5571134bc</token>
+     * <message>Login sucessful</message>
+     * <code>200</code>
+     * </auth>
+     */
     private string createLoginXml()
     {
       var x = "";
@@ -66,7 +91,7 @@ namespace OperaLink
         using (var xw = XmlWriter.Create(ms, xml_settings_))
         {
           xw.WriteStartDocument();
-          xw.WriteStartElement("auth", "http://xmlns.opera.com/2007/auth");
+          xw.WriteStartElement("auth", OperaLinkXmlNameSpaces.AUTH_XML_NAME_SPACE);
           xw.WriteAttributeString("version", "1.1");
           xw.WriteStartElement("login");
           xw.WriteStartElement("username"); xw.WriteString(conf_.UserName); xw.WriteEndElement();
@@ -81,25 +106,24 @@ namespace OperaLink
       return x;
     }
 
-    /*<?xml version="1.0" encoding="utf-8"?>
-     * <auth version="1.1" xmlns="http://xmlns.opera.com/2007/auth">
-     * <token>44c08bc467e30f70441876f5571134bc</token>
-     * <message>Login sucessful</message>
-     * <code>200</code>
-     * </auth>
-     */
     public bool Login()
     {
       LastStatus = "Login to OperaLink Server... ";
-      var enc = Encoding.GetEncoding("utf-8");
+      var loginxml = createLoginXml();
+      OperaLink.Utils.ODS(loginxml);
+
       var wc = new WebClient();
       wc.Headers["User-Agent"] = conf_.UserAgent;
-      var loginxml = createLoginXml(); OperaLink.Utils.ODS(loginxml);
-      var res = wc.UploadData(LOGIN_API, "POST", enc.GetBytes(createLoginXml()));
-      var resXml = enc.GetString(res);
-      System.Diagnostics.Debug.WriteLine(resXml);
+      //wc.UploadDataCompleted += new UploadDataCompletedEventHandler(uploadLoginXmlCompleted);
+      var res = wc.UploadData(new Uri(LOGIN_API), "POST", enc_.GetBytes(loginxml));
+      return uploadLoginXmlCompleted(res);
+    }
+
+    bool uploadLoginXmlCompleted(byte[] res)
+    {
       var msg = "";
       int code = -1;
+      token_ = null;
       using (var ms = new MemoryStream())
       {
         ms.Write(res, 0, res.Count());
@@ -117,7 +141,8 @@ namespace OperaLink
           }
           catch (XmlException ex)
           {
-            System.Diagnostics.Debug.WriteLine(ex.Message);
+            OperaLink.Utils.ODS(ex.Message);
+            LastStatus = "Login Failed." + ex.Message;
             return false;
           }
         }
@@ -127,7 +152,7 @@ namespace OperaLink
       OperaLink.Utils.ODS(string.Format("{0}:{1}", "token", token_));
       OperaLink.Utils.ODS(string.Format("{0}:{1}", "message", msg));
       OperaLink.Utils.ODS(string.Format("{0}:{1}", "code", code));
-      return code == 200;
+      return (code == 200);
     }
 
     /* <?xml version="1.0" encoding="utf-8"?>
@@ -147,42 +172,34 @@ namespace OperaLink
     private string createLinkXml()
     {
       var x = "";
-      var supports = new Dictionary<string, bool>();
-      supports["typed_history"] = true;
-      supports["search_engine"] = false;
-      supports["speeddial"] = false;
-      supports["note"] = false;
-      supports["bookmark"] = false;
       using (var ms = new MemoryStream())
       {
         using (var xw = XmlWriter.Create(ms))
         {
           xw.WriteStartDocument();
-          xw.WriteStartElement("link", "http://xmlns.opera.com/2006/link");
+          xw.WriteStartElement("link", OperaLinkXmlNameSpaces.LINK_XML_NAME_SPACE);
           xw.WriteAttributeString("version", "1.0");
           xw.WriteAttributeString("user", conf_.UserName);
           xw.WriteAttributeString("password", conf_.Password);
           xw.WriteAttributeString("syncstate", (sync_state_).ToString());
           xw.WriteAttributeString("dirty", "0");
           xw.WriteStartElement("clientinfo");
-          xw.WriteStartElement("build"); xw.WriteString("3374"); xw.WriteEndElement();
-          xw.WriteStartElement("system"); xw.WriteString("win32"); xw.WriteEndElement();
-          foreach (var i in (new[] { "typed_history", "search_engine", "speeddial", "note", "bookmark" }))
-          {
-            if (supports[i])
-            {
-              xw.WriteStartElement("supports");
-              if (i == "search_engine")
-              {
-                xw.WriteAttributeString("target", "desktop");
-              }
-              xw.WriteString(i);
-              xw.WriteEndElement();
-            }
-          }
+          xw.WriteStartElement("build"); xw.WriteString(conf_.BuildNumber.ToString()); xw.WriteEndElement();
+          xw.WriteStartElement("system"); xw.WriteString(conf_.SystemName); xw.WriteEndElement();
+          if (conf_.SyncBookmark) { xw.WriteStartElement("supports"); xw.WriteString("bookmark"); xw.WriteEndElement(); }
+          if (conf_.SyncNotes) { xw.WriteStartElement("supports"); xw.WriteString("note"); xw.WriteEndElement(); }
+          //if (conf_.SyncPersonalBar) { xw.WriteStartElement("supports"); xw.WriteString("bookmark"); xw.WriteEndElement(); }
+          if (conf_.SyncSearches) { xw.WriteStartElement("supports"); xw.WriteString("search_engine"); xw.WriteEndElement(); }
+          if (conf_.SyncSpeedDial) { xw.WriteStartElement("supports"); xw.WriteString("speeddial"); xw.WriteEndElement(); }
+          if (conf_.SyncTypedHistory) { xw.WriteStartElement("supports"); xw.WriteString("typed_history"); xw.WriteEndElement(); }
+          
           xw.WriteEndElement();
           xw.WriteStartElement("data");
-          xw.WriteRaw(typeds_.ToOperaLinkXml());
+          if (conf_.SyncBookmark) { xw.WriteRaw(bms_.ToOperaLinkXml()); }
+          if (conf_.SyncNotes) { xw.WriteRaw(notes_.ToOperaLinkXml()); }
+          if (conf_.SyncSearches) { xw.WriteRaw(ses_.ToOperaLinkXml()); }
+          if (conf_.SyncSpeedDial) { xw.WriteRaw(sds_.ToOperaLinkXml()); }
+          if (conf_.SyncTypedHistory) { xw.WriteRaw(typeds_.ToOperaLinkXml()); }
           xw.WriteEndElement();
           xw.WriteEndElement();
           xw.WriteEndDocument();
@@ -194,26 +211,32 @@ namespace OperaLink
       return x;
     }
 
-    public string LastStatus { get; private set; }
     public bool Sync()
     {
-      if (string.IsNullOrEmpty(token_))
+      if (!Logined)
       {
         if (!Login())
         {
+          LastStatus = "Login Failed";
+          OnSyncFailed(new EventArgs());
           return false;
         }
-        LastStatus = "Login Success";
       }
-      var enc = Encoding.GetEncoding("utf-8");
-      var wc = new WebClient();
-      wc.Headers["User-Agent"] = conf_.UserAgent;
       var lxml = createLinkXml();
-      System.Diagnostics.Debug.WriteLine(lxml);
+      OperaLink.Utils.ODS(lxml);
+      var wc = new WebClient(); ;
+      wc.Headers["User-Agent"] = conf_.UserAgent;
+      wc.UploadDataCompleted += new UploadDataCompletedEventHandler(uploadSyncXmlCompleted);
+      wc.UploadDataAsync(new Uri(LINK_API), "POST", enc_.GetBytes(lxml));
+      return true;
+    }
+
+    private void uploadSyncXmlCompleted(object sender, UploadDataCompletedEventArgs e)
+    {
+      var res = e.Result;
       try
       {
-        var res = wc.UploadData(LINK_API, "POST", enc.GetBytes(lxml));
-        var resXml = enc.GetString(res);
+        var resXml = enc_.GetString(res);
         OperaLink.Utils.ODS(resXml);
         readServerInfo(resXml);
         typeds_.FromOperaLinkXml(resXml);
@@ -221,16 +244,17 @@ namespace OperaLink
         sds_.FromOperaLinkXml(resXml);
         notes_.FromOperaLinkXml(resXml);
         bms_.FromOperaLinkXml(resXml);
-        LastStatus = "Synced";
         typeds_.SyncDone();
+
+        LastStatus = "Sync Success.";
+        OnSyncSuccessed(new EventArgs());
       }
       catch (WebException wex)
       {
         Utils.ODS(wex.StackTrace);
-        LastStatus = "Sync Failed";
-        return false;
+        LastStatus = "Sync Failed.";
+        OnSyncFailed(new EventArgs());
       }
-      return true;
     }
 
     private void readServerInfo(String xmlString)
@@ -270,7 +294,7 @@ namespace OperaLink
       }
       catch (XmlException xex)
       {
-        System.Diagnostics.Debug.WriteLine(xex.StackTrace);
+        OperaLink.Utils.ODS(xex.StackTrace);
       }
     }
 

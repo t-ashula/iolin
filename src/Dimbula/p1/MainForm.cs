@@ -19,16 +19,35 @@ namespace OperaLink
       configs_ = new Configs();
       client_ = new Client(configs_);
       initSyncPanels();
-      toolStripStatusLabel1.Text = client_.LastStatus;
+      client_.LastStautsChanged += new EventHandler(clientLastStautsChanged);
+      //client_.LoginSuccessed += new EventHandler(client__LoginSuccessed);
+      //client_.LoginFailed += new EventHandler(client__LoginFailed);
+      client_.SyncFailed += new EventHandler(client__SyncFailed);
+      client_.SyncSuccessed += new EventHandler(client__SyncSuccessed);
+    }
+
+    void client__SyncSuccessed(object sender, EventArgs e)
+    {
+      UpdateTables();
+    }
+
+    void client__SyncFailed(object sender, EventArgs e)
+    {
+      MessageBox.Show("Sync Failed");
+    }
+
+    private void clientLastStautsChanged(object sender, EventArgs e)
+    {
+      this.toolStripStatusLabel1.Text = client_.LastStatus;
     }
 
     private void initSyncPanels()
     {
       addSyncPanel(new OperaLink.Forms.TypedHistoryPanel(client_));
-      // addSyncPanel(new OperaLink.Forms.BookmarkPanel(client_));
-      // addSyncPanel(new OperaLink.Forms.NotePanel(client_));
-      // addSyncPanel(new OperaLink.Forms.SearchEnginePanel(client_));
-      // addSyncPanel(new OperaLink.Forms.SpeedDialPanel(client_));
+      addSyncPanel(new OperaLink.Forms.BookmarkPanel(client_));
+      addSyncPanel(new OperaLink.Forms.NotePanel(client_));
+      addSyncPanel(new OperaLink.Forms.SearchEnginePanel(client_));
+      addSyncPanel(new OperaLink.Forms.SpeedDialPanel(client_));
     }
 
     private void addSyncPanel(ISyncPanel sp)
@@ -42,7 +61,7 @@ namespace OperaLink
     {
       this.Close();
     }
-
+    
     private void aboutAToolStripMenuItem_Click(object sender, EventArgs e)
     {
       (new OperaLink.AboutBox()).ShowDialog();
@@ -79,11 +98,7 @@ namespace OperaLink
         {
           showConfigDlg();
         }
-        if (client_.Sync())
-        {
-          UpdateTables();
-        }
-        toolStripStatusLabel1.Text = client_.LastStatus;
+        client_.Sync();
       }
       catch (Exception ex)
       {

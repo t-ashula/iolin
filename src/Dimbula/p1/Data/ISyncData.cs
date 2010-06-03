@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 
 namespace OperaLink.Data
 {
@@ -14,7 +15,7 @@ namespace OperaLink.Data
   /// 
   /// </summary>
   /// <typeparam name="ContentData"></typeparam>
-  public class ISyncDataWrapper<ContentData>
+  public class ISyncDataWrapper<ContentData> : IEqualityComparer<ISyncDataWrapper<ContentData>>
   {
     public ISyncDataWrapper() { }
     /// <summary>
@@ -46,25 +47,42 @@ namespace OperaLink.Data
     /// </summary>
     /// <param name="other">other instance</param>
     public virtual void ModContent(ISyncDataWrapper<ContentData> other) { /* nothing */ }
+
+
+    #region IEqualityComparer<ISyncDataWrapper<ContentData>> メンバ
+
+    public bool Equals(ISyncDataWrapper<ContentData> x, ISyncDataWrapper<ContentData> y)
+    {
+      return x.IsSameContent(y);
+    }
+
+    public int GetHashCode(ISyncDataWrapper<ContentData> obj)
+    {
+      return (1023 * obj.State.GetHashCode()) ^ obj.Content.GetHashCode();
+    }
+
+    #endregion
   }
 
   /// <summary>
   /// OperaLink data manager
   /// </summary>
   /// <typeparam name="ContentData">Data type</typeparam>
-  public class ISyncDataManager<ContentData, Deriv>
-    where Deriv : ISyncDataWrapper<ContentData>, new()
+  public class ISyncDataManager<ContentData, DataWrapper>
+    where DataWrapper : ISyncDataWrapper<ContentData>, new()
   {
-    protected List<Deriv> inner_items_;
-    protected List<Deriv> to_sync_items_;
-
+    private List<DataWrapper> inner_items_;
+    private List<DataWrapper> to_sync_items_;
+    private readonly string[] OwnElements;
+    
     /// <summary>
     /// ctor.
     /// </summary>
-    public ISyncDataManager()
+    public ISyncDataManager( string[] ownElements )
     {
-      inner_items_ = new List<Deriv>();
-      to_sync_items_ = new List<Deriv>();
+      inner_items_ = new List<DataWrapper>();
+      to_sync_items_ = new List<DataWrapper>();
+      OwnElements = ownElements;
     }
 
     /// <summary>
@@ -75,18 +93,36 @@ namespace OperaLink.Data
     {
       return to_sync_items_.Aggregate("", (x, i) => x + i.ToOperaLinkXml());
     }
-    
+
     /// <summary>
     /// update internal list from OperaLink 
     /// </summary>
-    /// <param name="xmlString">xml string from OperaLink server containes 0 or more elements</param>
-    public virtual void FromOperaLinkXml(string xmlString) {}
+    /// <param name="xmlString">xml string from OperaLink server contains 0 or more elements</param>
+    public virtual void FromOperaLinkXml(string xmlString)
+    {
+      if (string.IsNullOrEmpty(xmlString))
+      {
+        return;
+      }
+      var xd = new XmlDocument();
+      xd.LoadXml(xmlString);
+      foreach (var elementName in OwnElements)
+      {
+        var eles = xd.GetElementsByTagName(elementName);
+        for (int i = 0; i < eles.Count; ++i)
+        {
+          var item = new DataWrapper();
+          item.FromOperaLinkXml(eles[i].OuterXml);
+          ChangeInnerList(item);
+        }
+      }
+    }
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="d"></param>
-    protected void ChangeInnerList(Deriv d)
+    protected void ChangeInnerList(DataWrapper d)
     {
       switch (d.State)
       {
@@ -103,7 +139,7 @@ namespace OperaLink.Data
     /// <returns>list items count.</returns>
     public int Add(ContentData d)
     {
-      var item = new Deriv
+      var item = new DataWrapper
       {
         Content = d,
         State = SyncState.Added
@@ -114,8 +150,7 @@ namespace OperaLink.Data
       }
       return inner_items_.Count;
     }
-
-    private bool addItem(Deriv d)
+    private bool addItem(DataWrapper d)
     {
       if (inner_items_.Exists(i => i.IsSameContent(d)))
       {
@@ -124,7 +159,7 @@ namespace OperaLink.Data
       inner_items_.Add(d);
       return true;
     }
-    private bool addSyncItem(Deriv d)
+    private bool addSyncItem(DataWrapper d)
     {
       to_sync_items_.Add(d);
       return true;
@@ -137,7 +172,7 @@ namespace OperaLink.Data
     /// <returns>list items count</returns>
     public int Mod(ContentData d)
     {
-      var item = new Deriv
+      var item = new DataWrapper
       {
         State = SyncState.Modified,
         Content = d
@@ -146,7 +181,7 @@ namespace OperaLink.Data
       modSyncItem(item);
       return inner_items_.Count;
     }
-    private bool modItem(Deriv d)
+    private bool modItem(DataWrapper d)
     {
       var idx = inner_items_.FindIndex(i => i.IsSameContent(d));
       if (idx < 0)
@@ -156,7 +191,7 @@ namespace OperaLink.Data
       inner_items_[idx].ModContent(d);
       return true;
     }
-    private bool modSyncItem(Deriv d)
+    private bool modSyncItem(DataWrapper d)
     {
       var idx = to_sync_items_.FindIndex(i => i.IsSameContent(d));
       if (idx < 0)
@@ -178,7 +213,8 @@ namespace OperaLink.Data
     /// <returns>list items count</returns>
     public int Del(ContentData d)
     {
-      var item = new Deriv      {
+      var item = new DataWrapper
+      {
         State = SyncState.Deleted,
         Content = d
       };
@@ -188,7 +224,7 @@ namespace OperaLink.Data
       }
       return inner_items_.Count;
     }
-    private bool delItem(Deriv d)
+    private bool delItem(DataWrapper d)
     {
       var idx = inner_items_.ToList().FindIndex(i => i.IsSameContent(d));
       if (idx < 0)
@@ -198,7 +234,7 @@ namespace OperaLink.Data
       inner_items_.RemoveAt(idx);
       return true;
     }
-    private bool delSyncItem(Deriv d)
+    private bool delSyncItem(DataWrapper d)
     {
       var in_sync = to_sync_items_.FindIndex(i => i.IsSameContent(d));
       if (in_sync < 0)
@@ -219,11 +255,6 @@ namespace OperaLink.Data
     public IEnumerable<ContentData> Items { get { return inner_items_.Select(i => i.Content); } }
 
     /// <summary>
-    /// Content state only list
-    /// </summary>
-    public IEnumerable<SyncState> States { get { return inner_items_.Select(i => i.State); } }
-
-    /// <summary>
     /// load data from local file such as speeddial.ini etc.
     /// </summary>
     /// <param name="storagePath">file path</param>
@@ -240,9 +271,6 @@ namespace OperaLink.Data
     /// <summary>
     /// clear to sync data list
     /// </summary>
-    public void SyncDone()
-    {
-      to_sync_items_.Clear();
-    }
+    public void SyncDone() { to_sync_items_.Clear(); }
   }
 }

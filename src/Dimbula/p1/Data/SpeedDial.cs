@@ -100,22 +100,9 @@ namespace OperaLink.Data
 
   public class SpeedDialManager : ISyncDataManager<SpeedDial, SpeedDialContent>
   {
-    public override void FromOperaLinkXml(string xmlString)
+    public SpeedDialManager()
+      : base( new string[] { "speeddial" })
     {
-      if (string.IsNullOrEmpty(xmlString))
-      {
-        return;
-      }
-      var xd = new XmlDocument();
-      xd.LoadXml(xmlString);
-      var engines = xd.GetElementsByTagName("speeddial");
-      for (int i = 0; i < engines.Count; ++i)
-      {
-        var item = new SpeedDialContent();
-        item.FromOperaLinkXml(engines[i].OuterXml);
-        ChangeInnerList(item);
-      }
     }
   }
-
 }

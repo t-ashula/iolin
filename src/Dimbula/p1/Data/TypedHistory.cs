@@ -63,7 +63,7 @@ namespace OperaLink.Data
 
     public override void FromOperaLinkXml(string xmlString)
     {
-      var xd = new XmlDocument(); 
+      var xd = new XmlDocument();
       xd.LoadXml(xmlString);
       var t = xd.GetElementsByTagName("typed_history")[0];
       Content = new TypedHistory
@@ -95,21 +95,9 @@ namespace OperaLink.Data
 
   public class TypedHistoryManager : ISyncDataManager<TypedHistory, TypedHistoryWrapper>
   {
-    public override void FromOperaLinkXml(string xmlString)
+    public TypedHistoryManager()
+      : base(new string[] { "typed_history" })
     {
-      if (string.IsNullOrEmpty(xmlString))
-      {
-        return;
-      }
-      var xd = new XmlDocument();
-      xd.LoadXml(xmlString);
-      var typed = xd.GetElementsByTagName("typed_history");
-      for (int i = 0; i < typed.Count; ++i)
-      {
-        var item = new TypedHistoryWrapper();
-        item.FromOperaLinkXml(typed[i].OuterXml);
-        ChangeInnerList(item);
-      }
     }
   }
 }

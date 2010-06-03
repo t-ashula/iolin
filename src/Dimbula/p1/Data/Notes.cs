@@ -182,29 +182,9 @@ namespace OperaLink.Data
 
   public class NoteManager : ISyncDataManager<Note, NoteWrapper>
   {
-    public NoteManager() { }
-    public override void FromOperaLinkXml(string xmlString)
+    public NoteManager()
+      : base(new string[] { "note", "note_folder" })
     {
-      if (string.IsNullOrEmpty(xmlString))
-      {
-        return;
-      }
-      var xd = new XmlDocument();
-      xd.LoadXml(xmlString);
-      var notes = xd.GetElementsByTagName("note") ;
-      for (int i = 0; i < notes.Count; ++i)
-      {
-        var item = new NoteWrapper();
-        item.FromOperaLinkXml(notes[i].OuterXml);
-        ChangeInnerList(item);
-      }
-      var folders = xd.GetElementsByTagName("note_folder");
-      for (int i = 0; i < folders.Count; ++i)
-      {
-        var item = new NoteWrapper();
-        item.FromOperaLinkXml(folders[i].OuterXml);
-        ChangeInnerList(item);
-      }
     }
   }
 }

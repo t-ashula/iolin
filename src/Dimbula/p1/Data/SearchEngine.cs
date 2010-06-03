@@ -11,7 +11,7 @@ namespace OperaLink.Data
 {
   public class SearchEngine
   {
-    public Guid Uuid{ get; set; }
+    public Guid Uuid { get; set; }
     public enum SEType { Normal, HistorySearch, FindInPage };
     public SEType Type { get; set; }
     public enum SEGroup { Custome, DesktopDefault };
@@ -27,7 +27,7 @@ namespace OperaLink.Data
     public string PostQuery { get; set; }
     public Image Icon { get; set; }
   }
- 
+
   public class SearchEngineWrapper : ISyncDataWrapper<SearchEngine>
   {
     public SearchEngineWrapper()
@@ -35,7 +35,7 @@ namespace OperaLink.Data
       Content = new SearchEngine();
       State = SyncState.Added;
     }
-    
+
     public override bool IsSameContent(ISyncDataWrapper<SearchEngine> other)
     {
       return this.Content.Uuid == other.Content.Uuid;
@@ -105,14 +105,14 @@ namespace OperaLink.Data
         s == "history_search" ? SearchEngine.SEType.HistorySearch :
         s == "normal" ? SearchEngine.SEType.Normal : SearchEngine.SEType.Normal;
     }
-    
+
     private string SEGroupToString(SearchEngine.SEGroup g)
     {
       return
         g == SearchEngine.SEGroup.DesktopDefault ? "desktop_default" :
         g == SearchEngine.SEGroup.Custome ? "custom" : "custom";
     }
-    
+
     private SearchEngine.SEGroup StringToSEGroup(string s)
     {
       if (String.IsNullOrEmpty(s))
@@ -123,7 +123,7 @@ namespace OperaLink.Data
         s == "desktop_default" ? SearchEngine.SEGroup.DesktopDefault :
         s == "custom" ? SearchEngine.SEGroup.Custome : SearchEngine.SEGroup.Custome;
     }
-    
+
     public override string ToOperaLinkXml()
     {
       var x = "";
@@ -133,7 +133,7 @@ namespace OperaLink.Data
         NewLineOnAttributes = false,
         Indent = false,
       };
-      
+
       using (var ms = new MemoryStream())
       {
         using (var xw = XmlWriter.Create(ms, xml_settings))
@@ -143,11 +143,11 @@ namespace OperaLink.Data
           xw.WriteAttributeString("id", Content.Uuid.ToString().Replace("-", ""));
           xw.WriteAttributeString("type", SETypeToString(Content.Type));
           xw.WriteStartElement("group"); xw.WriteString(SEGroupToString(Content.Group)); xw.WriteEndElement();
-          xw.WriteStartElement("hidden"); xw.WriteString((Content.Deleted ? 1 : 0 ).ToString()); xw.WriteEndElement();
+          xw.WriteStartElement("hidden"); xw.WriteString((Content.Deleted ? 1 : 0).ToString()); xw.WriteEndElement();
           xw.WriteStartElement("is_post"); xw.WriteString((Content.IsPost ? 1 : 0).ToString()); xw.WriteEndElement();
           xw.WriteStartElement("personal_bar_pos"); xw.WriteString((Content.PersonalBarPos).ToString()); xw.WriteEndElement();
           xw.WriteStartElement("show_in_personal_bar"); xw.WriteString((Content.ShowInPersonal ? 1 : 0).ToString()); xw.WriteEndElement();
-          xw.WriteStartElement("title"); xw.WriteString((Content.Title.Replace("<","&lt;"))); xw.WriteEndElement();
+          xw.WriteStartElement("title"); xw.WriteString((Content.Title.Replace("<", "&lt;"))); xw.WriteEndElement();
           xw.WriteStartElement("uri"); xw.WriteString((Content.Uri.ToString())); xw.WriteEndElement();
           xw.WriteStartElement("key"); xw.WriteString((Content.Key)); xw.WriteEndElement();
           xw.WriteStartElement("encoding"); xw.WriteString((Content.Encoding)); xw.WriteEndElement();
@@ -155,7 +155,7 @@ namespace OperaLink.Data
           xw.WriteStartElement("icon"); xw.WriteString((Utils.IconToString(Content.Icon))); xw.WriteEndElement();
           xw.WriteEndElement();
         }
-        
+
         ms.Position = 0;
         x = (new StreamReader(ms)).ReadToEnd();
       }
@@ -189,29 +189,14 @@ namespace OperaLink.Data
       Content.Uri = other.Content.Uri;
       Content.Key = other.Content.Key; Content.Encoding = other.Content.Encoding;
       Content.Icon = other.Content.Icon;
-    } 
+    }
   }
 
   public class SearchEngineManager : ISyncDataManager<SearchEngine, SearchEngineWrapper>
   {
     public SearchEngineManager()
+      : base(new string[] { "search_engine" })
     {
-    }
-    public override void FromOperaLinkXml(string xmlString)
-    {
-      if (string.IsNullOrEmpty(xmlString))
-      {
-        return;
-      }
-      var xd = new XmlDocument();
-      xd.LoadXml(xmlString);
-      var engines = xd.GetElementsByTagName("search_engine");
-      for (int i = 0; i < engines.Count; ++i)
-      {
-        var item = new SearchEngineWrapper();
-        item.FromOperaLinkXml(engines[i].OuterXml);
-        ChangeInnerList(item);
-      }
     }
   }
 }

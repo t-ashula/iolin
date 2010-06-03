@@ -62,7 +62,8 @@ namespace OperaLink.Data
      * <panel_pos>-1</panel_pos> 
      * </bookmark>
      */
-    private void FromOperaLinkXmlBookmark(string xmlString) {
+    private void FromOperaLinkXmlBookmark(string xmlString)
+    {
       var xd = new XmlDocument();
       xd.LoadXml(xmlString);
       var nsm = new XmlNamespaceManager(xd.NameTable);
@@ -82,7 +83,7 @@ namespace OperaLink.Data
       var c = t.SelectSingleNode("//oplink:title", nsm);
       if (c != null) { Content.Title = c.InnerText; }
       var uri = t.SelectSingleNode("//oplink:uri", nsm);//.InnerText;
-      if (uri != null ) { Content.Uri = uri.InnerText; }
+      if (uri != null) { Content.Uri = uri.InnerText; }
       var pbpos = t.SelectSingleNode("//oplink:personal_bar_pos", nsm);
       if (pbpos != null)
       {
@@ -111,35 +112,35 @@ namespace OperaLink.Data
       var nsm = new XmlNamespaceManager(xd.NameTable);
       nsm.AddNamespace("oplink", "http://xmlns.opera.com/2006/link");
       var t = xd.GetElementsByTagName("bookmark_folder")[0];
-        Content = new Bookmark
-        {
-          ID = new Guid(t.Attributes["id"].Value),
-          Type = Bookmark.BookmarkType.Folder,
-        };
-        var pa = t.Attributes["parent"].Value;
-        if (!string.IsNullOrEmpty(pa)) { Content.Parent = new Guid(pa); }
-        var pre = t.Attributes["previous"].Value;
-        if (!string.IsNullOrEmpty(pre)) { Content.Previous = new Guid(pre); }
-        var ct = t.Attributes["created"];
-        if (ct != null) { Content.Created = DateTime.Parse(ct.Value); }
-        var ty = t.Attributes["type"];
-        if (ty != null && ty.Value == "trash") { Content.Type = Bookmark.BookmarkType.Trash; }
-        var c = t.SelectSingleNode("//oplink:title", nsm);
-        if (c != null) { Content.Title = c.InnerText; }
-        var pbpos = t.SelectSingleNode("//oplink:personal_bar_pos", nsm);
-        if (pbpos != null)
-        {
-          Content.PersonalBarPos = System.Convert.ToInt32(pbpos.InnerText);
-          Content.ShowInPersonal = t.SelectSingleNode("//oplink:show_in_personal_bar", nsm).InnerText != "0";
-        }
-        var panelpos = t.SelectSingleNode("//oplink:panel_pos", nsm);
-        if (panelpos != null)
-        {
-          Content.PanelPos = System.Convert.ToInt32(panelpos.InnerText);
-          Content.ShowInPanel = t.SelectSingleNode("//oplink:show_in_panel", nsm).InnerText != "0";
-        }
-        State = Utils.StringToState(t.Attributes["status"].Value);
-     
+      Content = new Bookmark
+      {
+        ID = new Guid(t.Attributes["id"].Value),
+        Type = Bookmark.BookmarkType.Folder,
+      };
+      var pa = t.Attributes["parent"].Value;
+      if (!string.IsNullOrEmpty(pa)) { Content.Parent = new Guid(pa); }
+      var pre = t.Attributes["previous"].Value;
+      if (!string.IsNullOrEmpty(pre)) { Content.Previous = new Guid(pre); }
+      var ct = t.Attributes["created"];
+      if (ct != null) { Content.Created = DateTime.Parse(ct.Value); }
+      var ty = t.Attributes["type"];
+      if (ty != null && ty.Value == "trash") { Content.Type = Bookmark.BookmarkType.Trash; }
+      var c = t.SelectSingleNode("//oplink:title", nsm);
+      if (c != null) { Content.Title = c.InnerText; }
+      var pbpos = t.SelectSingleNode("//oplink:personal_bar_pos", nsm);
+      if (pbpos != null)
+      {
+        Content.PersonalBarPos = System.Convert.ToInt32(pbpos.InnerText);
+        Content.ShowInPersonal = t.SelectSingleNode("//oplink:show_in_personal_bar", nsm).InnerText != "0";
+      }
+      var panelpos = t.SelectSingleNode("//oplink:panel_pos", nsm);
+      if (panelpos != null)
+      {
+        Content.PanelPos = System.Convert.ToInt32(panelpos.InnerText);
+        Content.ShowInPanel = t.SelectSingleNode("//oplink:show_in_panel", nsm).InnerText != "0";
+      }
+      State = Utils.StringToState(t.Attributes["status"].Value);
+
     }
 
     public override string ToOperaLinkXml()
@@ -169,30 +170,9 @@ namespace OperaLink.Data
     }
   }
 
-  public class BookmarkManager : ISyncDataManager<Bookmark,BookmarkWrapper>
+  public class BookmarkManager : ISyncDataManager<Bookmark, BookmarkWrapper>
   {
-    public override void FromOperaLinkXml(string xmlString)
-    {
-      if (string.IsNullOrEmpty(xmlString))
-      {
-        return;
-      }
-      var xd = new XmlDocument();
-      xd.LoadXml(xmlString);
-      var notes = xd.GetElementsByTagName("bookmark");
-      for (int i = 0; i < notes.Count; ++i)
-      {
-        var item = new BookmarkWrapper();
-        item.FromOperaLinkXml(notes[i].OuterXml);
-        ChangeInnerList(item);
-      }
-      var folders = xd.GetElementsByTagName("bookmark_folder");
-      for (int i = 0; i < folders.Count; ++i)
-      {
-        var item = new BookmarkWrapper();
-        item.FromOperaLinkXml(folders[i].OuterXml);
-        ChangeInnerList(item);
-      }
-    }
+    public BookmarkManager()
+      : base(new string[] { "bookmark", "bookmark_folder" }) { }
   }
 }

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Xml;
 using System.IO;
-using System.Xml.Linq;
 
 namespace OperaLink.Data
 {
@@ -38,7 +34,7 @@ namespace OperaLink.Data
 
     public override bool IsSameContent(ISyncDataWrapper<SearchEngine> other)
     {
-      return this.Content.Uuid == other.Content.Uuid;
+      return Content.Uuid == other.Content.Uuid;
     }
 
     public override void FromOperaLinkXml(string xmlString)
@@ -55,7 +51,7 @@ namespace OperaLink.Data
       Content.Type = StringToSEType(t.Attributes["type"].Value);
       Content.Group = StringToSEGroup(t.SelectSingleNode("//oplink:group", nsm).FirstChild.Value);
       Content.IsPost = t.SelectSingleNode("//oplink:is_post", nsm).FirstChild.Value != "0";
-      Content.PersonalBarPos = System.Convert.ToInt32(t.SelectSingleNode("//oplink:personal_bar_pos", nsm).FirstChild.Value);
+      Content.PersonalBarPos = Convert.ToInt32(t.SelectSingleNode("//oplink:personal_bar_pos", nsm).FirstChild.Value);
       Content.ShowInPersonal = t.SelectSingleNode("//oplink:show_in_personal_bar", nsm).FirstChild.Value != "0";
       Content.Title = t.SelectSingleNode("//oplink:title", nsm).InnerText;
       if (!String.IsNullOrEmpty(t.SelectSingleNode("//oplink:uri", nsm).InnerText))
@@ -79,14 +75,14 @@ namespace OperaLink.Data
         Content.Icon = Image.FromStream(new MemoryStream(Convert.FromBase64String(t.SelectSingleNode("//oplink:icon", nsm).FirstChild.Value)));
       }
 
-      catch (System.Exception ex)
+      catch (Exception ex)
       {
         Utils.ODS(ex.StackTrace);
       }
       State = Utils.StringToState(t.Attributes["status"].Value);
     }
 
-    private string SETypeToString(SearchEngine.SEType t)
+    private static string SETypeToString(SearchEngine.SEType t)
     {
       return
         t == SearchEngine.SEType.HistorySearch ? "history_search" :
@@ -94,7 +90,7 @@ namespace OperaLink.Data
         t == SearchEngine.SEType.Normal ? "normal" : "";
     }
 
-    private SearchEngine.SEType StringToSEType(string s)
+    private static SearchEngine.SEType StringToSEType(string s)
     {
       if (String.IsNullOrEmpty(s))
       {
@@ -106,14 +102,14 @@ namespace OperaLink.Data
         s == "normal" ? SearchEngine.SEType.Normal : SearchEngine.SEType.Normal;
     }
 
-    private string SEGroupToString(SearchEngine.SEGroup g)
+    private static string SEGroupToString(SearchEngine.SEGroup g)
     {
       return
         g == SearchEngine.SEGroup.DesktopDefault ? "desktop_default" :
         g == SearchEngine.SEGroup.Custome ? "custom" : "custom";
     }
 
-    private SearchEngine.SEGroup StringToSEGroup(string s)
+    private static SearchEngine.SEGroup StringToSEGroup(string s)
     {
       if (String.IsNullOrEmpty(s))
       {

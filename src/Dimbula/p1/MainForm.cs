@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using OperaLink.Data;
 using OperaLink.Forms;
 
 namespace OperaLink
@@ -24,7 +17,7 @@ namespace OperaLink
 
     private void initSyncPanels()
     {
-      addSyncPanel(new OperaLink.Forms.TypedHistoryPanel(client_));
+      addSyncPanel(new TypedHistoryPanel(client_));
       // addSyncPanel(new OperaLink.Forms.BookmarkPanel(client_));
       // addSyncPanel(new OperaLink.Forms.NotePanel(client_));
       // addSyncPanel(new OperaLink.Forms.SearchEnginePanel(client_));
@@ -40,7 +33,7 @@ namespace OperaLink
 
     private void quitQToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      this.Close();
+      Close();
     }
 
     private void aboutAToolStripMenuItem_Click(object sender, EventArgs e)

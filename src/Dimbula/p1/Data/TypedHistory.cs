@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
-using System.IO;
 
 namespace OperaLink.Data
 {
@@ -33,7 +29,7 @@ namespace OperaLink.Data
     {
       Type = "text";
       Content = "";
-      LastTyped = System.DateTime.Now;
+      LastTyped = DateTime.Now;
     }
   }
 
@@ -47,7 +43,7 @@ namespace OperaLink.Data
 
     public override bool IsSameContent(ISyncDataWrapper<TypedHistory> other)
     {
-      return this.Content.Content == other.Content.Content;
+      return Content.Content == other.Content.Content;
     }
 
     public override string ToOperaLinkXml()

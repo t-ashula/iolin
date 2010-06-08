@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using System.Text;
 using System.Net;
 using System.Xml;
@@ -10,9 +9,6 @@ using OperaLink.Data;
 
 namespace OperaLink
 {
-  ///my $OPERA_UA_STRING = 'Opera/9.80 (Windows NT 6.0; U; en) Presto/2.5.24 Version/10.52';
-  ///my $LOGIN_API = 'https://auth.opera.com/xml';
-  ///my $LINK_API = 'https://link-server.opera.com/pull';
   /// <summary>
   /// 
   /// </summary>
@@ -49,7 +45,7 @@ namespace OperaLink
       bms_ = new BookmarkManager();
       xml_settings_ = new XmlWriterSettings
       {
-        Encoding = System.Text.Encoding.UTF8,
+        Encoding = Encoding.UTF8,
         NewLineOnAttributes = false,
       };
       sync_state_ = 0;
@@ -270,25 +266,25 @@ namespace OperaLink
       }
       catch (XmlException xex)
       {
-        System.Diagnostics.Debug.WriteLine(xex.StackTrace);
+        Utils.ODS(xex.StackTrace);
       }
     }
 
-    public void AddBookmark(OperaLink.Data.Bookmark d) { bms_.Add(d); }
-    public void ModBookmark(OperaLink.Data.Bookmark d) { bms_.Mod(d); }
-    public void DelBookmark(OperaLink.Data.Bookmark d) { bms_.Del(d); }
+    public void AddBookmark(Bookmark d) { bms_.Add(d); }
+    public void ModBookmark(Bookmark d) { bms_.Mod(d); }
+    public void DelBookmark(Bookmark d) { bms_.Del(d); }
 
-    public void AddNote(OperaLink.Data.Note d) { notes_.Add(d); }
-    public void ModNote(OperaLink.Data.Note d) { notes_.Mod(d); }
-    public void DelNote(OperaLink.Data.Note d) { notes_.Del(d); }
-    
-    public void AddSearchEngine(OperaLink.Data.SearchEngine d) { ses_.Add(d); }
-    public void ModSearchEngine(OperaLink.Data.SearchEngine d) { ses_.Mod(d); }
-    public void DelSearchEngine(OperaLink.Data.SearchEngine d) { ses_.Del(d); }
+    public void AddNote(Note d) { notes_.Add(d); }
+    public void ModNote(Note d) { notes_.Mod(d); }
+    public void DelNote(Note d) { notes_.Del(d); }
 
-    public void AddSpeedDial(OperaLink.Data.SpeedDial d) { sds_.Add(d); }
-    public void ModSpeedDial(OperaLink.Data.SpeedDial d) { sds_.Mod(d); }
-    public void DelSpeedDial(OperaLink.Data.SpeedDial d) { sds_.Del(d); }
+    public void AddSearchEngine(SearchEngine d) { ses_.Add(d); }
+    public void ModSearchEngine(SearchEngine d) { ses_.Mod(d); }
+    public void DelSearchEngine(SearchEngine d) { ses_.Del(d); }
+
+    public void AddSpeedDial(SpeedDial d) { sds_.Add(d); }
+    public void ModSpeedDial(SpeedDial d) { sds_.Mod(d); }
+    public void DelSpeedDial(SpeedDial d) { sds_.Del(d); }
 
     public void AddTypedHistory(TypedHistory d) { typeds_.Add(d); }
     public void ModTypedHistory(TypedHistory d) { typeds_.Mod(d); }

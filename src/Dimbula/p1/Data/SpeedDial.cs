@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Xml;
 using System.IO;
@@ -12,7 +9,7 @@ namespace OperaLink.Data
   public class SpeedDial
   {
     public int Position { get; set; }
-    public System.Drawing.Image Icon { get; set; }
+    public Image Icon { get; set; }
     public string Title { get; set; }
     public Uri Uri { get; set; }
     public bool ReloadEnabled { get; set; }
@@ -57,7 +54,7 @@ namespace OperaLink.Data
       {
         Content.Icon = Image.FromStream(new MemoryStream(Convert.FromBase64String(t.SelectSingleNode("//oplink:icon", nsm).InnerText)));
       }
-      catch (System.Exception ex)
+      catch (Exception ex)
       {
         Utils.ODS(ex.Message);
       }

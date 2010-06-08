@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
 using System.Xml;
-using System.IO;
 
 namespace OperaLink.Data
 {
@@ -37,8 +32,8 @@ namespace OperaLink.Data
   {
     public override bool IsSameContent(ISyncDataWrapper<Bookmark> other)
     {
-      return this.Content.ID == other.Content.ID
-        && this.Content.Parent == other.Content.Parent;
+      return Content.ID == other.Content.ID
+        && Content.Parent == other.Content.Parent;
     }
 
     public override void FromOperaLinkXml(string xmlString)
@@ -87,13 +82,13 @@ namespace OperaLink.Data
       var pbpos = t.SelectSingleNode("//oplink:personal_bar_pos", nsm);
       if (pbpos != null)
       {
-        Content.PersonalBarPos = System.Convert.ToInt32(pbpos.InnerText);
+        Content.PersonalBarPos = Convert.ToInt32(pbpos.InnerText);
         Content.ShowInPersonal = t.SelectSingleNode("//oplink:show_in_personal_bar", nsm).InnerText != "0";
       }
       var panelpos = t.SelectSingleNode("//oplink:panel_pos", nsm);
       if (panelpos != null)
       {
-        Content.PanelPos = System.Convert.ToInt32(panelpos.InnerText);
+        Content.PanelPos = Convert.ToInt32(panelpos.InnerText);
         Content.ShowInPanel = t.SelectSingleNode("//oplink:show_in_panel", nsm).InnerText != "0";
       }
       State = Utils.StringToState(t.Attributes["status"].Value);
@@ -130,13 +125,13 @@ namespace OperaLink.Data
       var pbpos = t.SelectSingleNode("//oplink:personal_bar_pos", nsm);
       if (pbpos != null)
       {
-        Content.PersonalBarPos = System.Convert.ToInt32(pbpos.InnerText);
+        Content.PersonalBarPos = Convert.ToInt32(pbpos.InnerText);
         Content.ShowInPersonal = t.SelectSingleNode("//oplink:show_in_personal_bar", nsm).InnerText != "0";
       }
       var panelpos = t.SelectSingleNode("//oplink:panel_pos", nsm);
       if (panelpos != null)
       {
-        Content.PanelPos = System.Convert.ToInt32(panelpos.InnerText);
+        Content.PanelPos = Convert.ToInt32(panelpos.InnerText);
         Content.ShowInPanel = t.SelectSingleNode("//oplink:show_in_panel", nsm).InnerText != "0";
       }
       State = Utils.StringToState(t.Attributes["status"].Value);

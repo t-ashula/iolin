@@ -3,7 +3,7 @@ use warnings;
 use Test::More;
 use Net::OperaLink::Data::SpeedDial;
 
-plan tests => 8;
+plan tests => 9;
 
 {
   my $h = Net::OperaLink::Data::SpeedDial->new;
@@ -46,6 +46,14 @@ plan tests => 8;
   $h->add( { position => 1, uri => 'hoge' } );
   is $h->del( { position => 1, uri => 'huga' } ), 0, 'valid delete test';
 }
+
+{
+  my $h = Net::OperaLink::Data::SpeedDial->new;
+  $h->add( { position => 1, uri => 'hoge' } );
+  $h->del( { position => 1, uri => 'huga' } );
+  is $h->del( { position => 1, uri => 'huga' } ), 0, 'cant delete twice test';
+}
+
 
 
 

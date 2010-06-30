@@ -6,6 +6,7 @@ using System.Text;
 using System.Net;
 using System.Xml;
 using System.IO;
+using System.Threading;
 using OperaLink.Data;
 
 namespace OperaLink
@@ -239,13 +240,11 @@ namespace OperaLink
         var resXml = enc_.GetString(res);
         OperaLink.Utils.ODS(resXml);
         readServerInfo(resXml);
-        typeds_.FromOperaLinkXml(resXml);
-        ses_.FromOperaLinkXml(resXml);
-        sds_.FromOperaLinkXml(resXml);
-        notes_.FromOperaLinkXml(resXml);
-        bms_.FromOperaLinkXml(resXml);
-        typeds_.SyncDone();
-
+        { typeds_.FromOperaLinkXml(resXml); typeds_.SyncDone(); }
+        { ses_.FromOperaLinkXml(resXml); ses_.SyncDone(); }
+        { sds_.FromOperaLinkXml(resXml); sds_.SyncDone(); }
+        { notes_.FromOperaLinkXml(resXml); notes_.SyncDone(); }
+        { bms_.FromOperaLinkXml(resXml); bms_.SyncDone(); }
         LastStatus = "Sync Success.";
         OnSyncSuccessed(new EventArgs());
       }

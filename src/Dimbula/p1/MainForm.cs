@@ -20,8 +20,6 @@ namespace OperaLink
       client_ = new Client(configs_);
       initSyncPanels();
       client_.LastStautsChanged += new EventHandler(clientLastStautsChanged);
-      //client_.LoginSuccessed += new EventHandler(client__LoginSuccessed);
-      //client_.LoginFailed += new EventHandler(client__LoginFailed);
       client_.SyncFailed += new EventHandler(client__SyncFailed);
       client_.SyncSuccessed += new EventHandler(client__SyncSuccessed);
     }

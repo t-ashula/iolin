@@ -6,15 +6,14 @@ using System.Drawing;
 using System.Xml;
 using System.IO;
 
-
 namespace OperaLink.Data
 {
   public class SpeedDial
   {
     public int Position { get; set; }
-    public System.Drawing.Image Icon { get; set; }
+    public Image Icon { get; set; }
     public string Title { get; set; }
-    public Uri Uri { get; set; }
+    public string Uri { get; set; }
     public bool ReloadEnabled { get; set; }
     public bool ReloadOnlyIfExpired { get; set; }
     public Int64 ReloadInterval { get; set; }
@@ -51,7 +50,7 @@ namespace OperaLink.Data
       var uri = t.SelectSingleNode("//oplink:uri", nsm).InnerText;
       if (!string.IsNullOrEmpty(uri))
       {
-        Content.Uri = new Uri(uri);
+        Content.Uri = uri;
       }
       try
       {

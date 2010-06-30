@@ -54,6 +54,5 @@ namespace OperaLink
         SyncFailed(this, e);
       }
     }
-
   }
 }

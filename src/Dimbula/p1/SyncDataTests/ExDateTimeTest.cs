@@ -69,7 +69,7 @@ namespace SyncDataTests
       DateTime d = new DateTime(2010,4,30,10,11,12,System.DateTimeKind.Local); // TODO: 適切な値に初期化してください
       string expected = "2010-04-30T01:11:12Z";
       string actual;
-      actual = ExDateTime.ToW3cDtfInUtc(d);
+      actual = ExDateTime.ToW3CDTFInUtc(d);
       Assert.AreEqual(expected, actual);
     }
   }

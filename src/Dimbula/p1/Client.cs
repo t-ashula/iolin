@@ -270,7 +270,7 @@ namespace OperaLink
       }
       catch (XmlException xex)
       {
-        System.Diagnostics.Debug.WriteLine(xex.StackTrace);
+        Utils.ODS(string.Format("{0} {1}", xex.Message, xex.StackTrace));
       }
     }
 

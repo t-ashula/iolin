@@ -4,7 +4,7 @@ namespace OperaLink
 {
   public class Configs
   {
-    private readonly string DEFAULT_USERAGENT_STRING = "Opera/9.80 (Windows NT 6.1; U; en) Presto/2.5.24 Version/10.52";
+    private readonly string DEFAULT_USERAGENT_STRING = "Opera/9.80 (Windows NT 6.1; U; en) Presto/2.6.30 Version/10.60";
     public enum DeviceTypes
     {
       desktop,
@@ -20,7 +20,7 @@ namespace OperaLink
     public bool SyncSearches { get; set; }
     public string UserAgent { get; set; }
     public string SystemName { get; set; }
-    public string BuildNumber { get; set; }
+    public int BuildNumber { get; set; }
     public DeviceTypes DeviceType { get; set; }
     public string DeviceTypeString { get { return DeviceType.ToString().ToLower(); } }
     public Configs()
@@ -35,7 +35,7 @@ namespace OperaLink
       SyncSpeedDial = true;
       SyncTypedHistory = true;
       SystemName = "win32";
-      BuildNumber = "3347";
+      BuildNumber = 3445;
       DeviceType = DeviceTypes.desktop;
     }
   }

@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using OperaLink.Data;
 using OperaLink.Forms;
 
 namespace OperaLink
@@ -25,10 +19,10 @@ namespace OperaLink
     private void initSyncPanels()
     {
       addSyncPanel(new OperaLink.Forms.TypedHistoryPanel(client_));
-      // addSyncPanel(new OperaLink.Forms.BookmarkPanel(client_));
-      // addSyncPanel(new OperaLink.Forms.NotePanel(client_));
-      // addSyncPanel(new OperaLink.Forms.SearchEnginePanel(client_));
-      // addSyncPanel(new OperaLink.Forms.SpeedDialPanel(client_));
+      addSyncPanel(new OperaLink.Forms.BookmarkPanel(client_));
+      addSyncPanel(new OperaLink.Forms.NotePanel(client_));
+      addSyncPanel(new OperaLink.Forms.SearchEnginePanel(client_));
+      addSyncPanel(new OperaLink.Forms.SpeedDialPanel(client_));
     }
 
     private void addSyncPanel(ISyncPanel sp)
@@ -93,10 +87,12 @@ namespace OperaLink
 
     private void UpdateTables()
     {
-      for (int i = 0; i < tabControl1.TabPages.Count; ++i)
-      {
-        ((ISyncPanel)tabControl1.TabPages[i].Controls[0]).UpdateSyncItems();
-      }
+      tabControl1.TabPages
+        .OfType<TabPage>()
+        .Select(p => p.Controls[0])
+        .Cast<ISyncPanel>()
+        .ToList()
+        .ForEach(p => p.UpdateSyncItems());
     }
   }
 }

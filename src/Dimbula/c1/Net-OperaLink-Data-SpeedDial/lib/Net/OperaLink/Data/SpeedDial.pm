@@ -43,6 +43,10 @@ sub mod {
 
 sub _mod_content {
   my ( $self, $item, $arg ) = @_;
+  my @keys = ( 'position', 'icon', 'title', 'uri', 'reload_enabled', 'reload_interval', 'reload_only_if_expired' );
+  foreach my $k ( @keys ) {
+    $item->{content}->{$k} = defined $arg->{$k} ? $arg->{$k} : $item->{content}->{$k};
+  }
 }
 
 sub del {
@@ -89,7 +93,26 @@ sub from_opera_link_xml {
 
 sub to_opera_link_xml {
   my ( $self ) = @_;
-  return '';
+  my $xml_string = '';
+  foreach my $item ( @{$self->{_to_sync_items}} ) {
+    my $status = $item->{status} ;
+    my $content = $item->{content};
+    if ( $status eq 'deleted' ) {
+      $xml_string .= join(q{}, ( q{<speeddial status="deleted" position="}, $content->{position}, q{" />} ) );
+    } else {
+      $xml_string .= join(q{}, ( '<speeddial ', 
+				'status="', $status, '" ', 
+				'position="', $content->{position}, '">',
+				'<icon>', $content->{icon}, '</icon>',
+				'<reload_only_if_expired>', $content->{reload_only_if_expired} == 0 ? 0 : 1, '</reload_only_if_expired>',
+				'<reload_enabled>', $content->{reload_enabled} == 0 ? 0 : 1, '</reload_enabled>',
+				'<reload_interval>', $content->{reload_interval}, '</reload_interval>',
+				'<uri>', $content->{uri}, '</uri>',
+				'<title>', $content->{title}, '</title>',
+				'</speeddial>' ) );
+    }
+  }
+  return $xml_string;
 }
 
 
@@ -124,6 +147,24 @@ This document describes Net::OperaLink::Data::SpeedDial version 0.0.1
 =head1 DESCRIPTION
 
 =head1 INTERFACE 
+
+=over 4
+
+=item new
+
+=item add
+
+=item mod
+
+=item del
+
+=item items
+
+=item from_opera_link_xml
+
+=item to_opera_link_xml
+
+=back 
 
 =head1 DIAGNOSTICS
 

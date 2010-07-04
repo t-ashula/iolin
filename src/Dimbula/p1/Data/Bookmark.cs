@@ -30,6 +30,7 @@ namespace OperaLink.Data
     public int PanelPos { get; set; }
     public bool ShowInPanel { get; set; }
     public enum BookmarkType { Item, Folder, Trash, Separator } ;
+    public String NickName { get; set; }
     public BookmarkType Type { get; set; }
   }
 
@@ -95,6 +96,11 @@ namespace OperaLink.Data
       {
         Content.PanelPos = System.Convert.ToInt32(panelpos.InnerText);
         Content.ShowInPanel = t.SelectSingleNode("//oplink:show_in_panel", nsm).InnerText != "0";
+      }
+      var nn = t.SelectSingleNode("//oplink:nickname", nsm);
+      if (nn != null)
+      {
+        Content.NickName = nn.InnerText;
       }
       State = Utils.StringToState(t.Attributes["status"].Value);
     }

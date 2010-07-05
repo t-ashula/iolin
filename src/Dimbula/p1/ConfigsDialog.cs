@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace OperaLink
@@ -35,12 +29,12 @@ namespace OperaLink
     {
       configs_.UserName = UsernameBox.Text;
       configs_.Password = PasswordBox.Text;
-      this.Close();
+      Close();
     }
 
     private void CancelBtn_Click(object sender, EventArgs e)
     {
-      this.Close();
+      Close();
     }
   }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml;
+
 namespace OperaLink
 {
   public class Configs

@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
 using System.Drawing;
 using System.Xml;
 using System.IO;
-
 
 namespace OperaLink.Data
 {
   public class SpeedDial
   {
     public int Position { get; set; }
-    public System.Drawing.Image Icon { get; set; }
+    public Image Icon { get; set; }
     public string Title { get; set; }
-    public Uri Uri { get; set; }
+    public string Uri { get; set; }
     public bool ReloadEnabled { get; set; }
     public bool ReloadOnlyIfExpired { get; set; }
     public Int64 ReloadInterval { get; set; }
@@ -37,7 +33,7 @@ namespace OperaLink.Data
     {
       var xd = new XmlDocument();
       xd.LoadXml(xmlString); var nsm = new XmlNamespaceManager(xd.NameTable);
-      nsm.AddNamespace("oplink", "http://xmlns.opera.com/2006/link");
+      nsm.AddNamespace("oplink", OperaLinkXmlNameSpaces.LINK_XML_NAME_SPACE);
       var t = xd.GetElementsByTagName("speeddial")[0];
 
       Content = new SpeedDial
@@ -51,7 +47,7 @@ namespace OperaLink.Data
       var uri = t.SelectSingleNode("//oplink:uri", nsm).InnerText;
       if (!string.IsNullOrEmpty(uri))
       {
-        Content.Uri = new Uri(uri);
+        Content.Uri = uri;
       }
       try
       {

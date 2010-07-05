@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
+using System;
 using System.Xml;
 using System.IO;
 
@@ -50,8 +46,9 @@ namespace OperaLink.Data
     private void FromOperaLinkXmlNote(string xmlString)
     {
       var xd = new XmlDocument();
-      xd.LoadXml(xmlString); var nsm = new XmlNamespaceManager(xd.NameTable);
-      nsm.AddNamespace("oplink", "http://xmlns.opera.com/2006/link");
+      xd.LoadXml(xmlString); 
+      var nsm = new XmlNamespaceManager(xd.NameTable);
+      nsm.AddNamespace("oplink", OperaLinkXmlNameSpaces.LINK_XML_NAME_SPACE); 
       var t = xd.GetElementsByTagName("note")[0];
 
       Content = new Note
@@ -67,15 +64,16 @@ namespace OperaLink.Data
       if (ct != null) { Content.Created = DateTime.Parse(ct.Value); }
       var c = t.SelectSingleNode("//oplink:content", nsm);
       if (c != null) { Content.Content = c.InnerText; }
-      var uri = t.SelectSingleNode("//oplink:uri", nsm).InnerText;
-      if (!string.IsNullOrEmpty(uri)) { Content.Uri = new Uri(uri); }
+      var uri = t.SelectSingleNode("//oplink:uri", nsm);//.InnerText;
+      if (uri != null && !string.IsNullOrEmpty(uri.InnerText)) { Content.Uri = new Uri(uri.InnerText); }
       State = Utils.StringToState(t.Attributes["status"].Value);
     }
     private void FromOperaLinkXmlFolder(string xmlString)
     {
       var xd = new XmlDocument();
-      xd.LoadXml(xmlString); var nsm = new XmlNamespaceManager(xd.NameTable);
-      nsm.AddNamespace("oplink", "http://xmlns.opera.com/2006/link");
+      xd.LoadXml(xmlString); 
+      var nsm = new XmlNamespaceManager(xd.NameTable);
+      nsm.AddNamespace("oplink", OperaLinkXmlNameSpaces.LINK_XML_NAME_SPACE); 
       var t = xd.GetElementsByTagName("note_folder")[0];
       OperaLink.Utils.ODS(t.OuterXml);
       Content = new Note
@@ -188,3 +186,6 @@ namespace OperaLink.Data
     }
   }
 }
+
+
+

@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
-using System.Xml;
 using System.IO;
+using System.Xml;
 
 namespace OperaLink.Data
 {
@@ -48,15 +48,15 @@ namespace OperaLink.Data
 
       Content = new SearchEngine()
       {
+        Encoding = t.SelectSingleNode("//oplink:encoding", nsm).InnerText,
+        Title = t.SelectSingleNode("//oplink:title", nsm).InnerText,
+        Key = t.SelectSingleNode("//oplink:key", nsm).InnerText,
         Uuid = new Guid(t.Attributes["id"].Value),
         Type = StringToSEType(t.Attributes["type"].Value),
         Group = StringToSEGroup(t.SelectSingleNode("//oplink:group", nsm).FirstChild.Value),
         IsPost = t.SelectSingleNode("//oplink:is_post", nsm).FirstChild.Value != "0",
         PersonalBarPos = System.Convert.ToInt32(t.SelectSingleNode("//oplink:personal_bar_pos", nsm).FirstChild.Value),
         ShowInPersonal = t.SelectSingleNode("//oplink:show_in_personal_bar", nsm).FirstChild.Value != "0",
-        Title = t.SelectSingleNode("//oplink:title", nsm).InnerText,
-        Key = t.SelectSingleNode("//oplink:key", nsm).InnerText,
-        Encoding = t.SelectSingleNode("//oplink:encoding", nsm).InnerText,
       };
 
       if (!String.IsNullOrEmpty(t.SelectSingleNode("//oplink:uri", nsm).InnerText))

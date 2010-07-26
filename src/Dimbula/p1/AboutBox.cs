@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -13,15 +9,15 @@ namespace OperaLink
     public AboutBox()
     {
       InitializeComponent();
-      this.Text = String.Format("{0} のバージョン情報 {0}", AssemblyTitle);
+      this.Text = String.Format("{0} Version Info {0}", AssemblyTitle);
       this.labelProductName.Text = AssemblyProduct;
-      this.labelVersion.Text = String.Format("バージョン {0} {0}", AssemblyVersion);
+      this.labelVersion.Text = String.Format("Version {0} {0}", AssemblyVersion);
       this.labelCopyright.Text = AssemblyCopyright;
       this.labelCompanyName.Text = AssemblyCompany;
       this.textBoxDescription.Text = AssemblyDescription;
     }
 
-    #region アセンブリ属性アクセサ
+    #region Assembly Attributes Accessor
 
     public string AssemblyTitle
     {

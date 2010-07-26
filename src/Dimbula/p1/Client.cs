@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using System.Text;
-using System.Net;
-using System.Xml;
 using System.IO;
-using System.Threading;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Xml;
 using OperaLink.Data;
 
 namespace OperaLink
@@ -76,14 +74,6 @@ namespace OperaLink
       enc_ = Encoding.GetEncoding("utf-8");
     }
 
-
-    /*<?xml version="1.0" encoding="utf-8"?>
-     * <auth version="1.1" xmlns="http://xmlns.opera.com/2007/auth">
-     * <token>44c08bc467e30f70441876f5571134bc</token>
-     * <message>Login sucessful</message>
-     * <code>200</code>
-     * </auth>
-     */
     private string createLoginXml()
     {
       var x = "";
@@ -111,7 +101,7 @@ namespace OperaLink
     {
       LastStatus = "Login to OperaLink Server... ";
       var loginxml = createLoginXml();
-      OperaLink.Utils.ODS(loginxml);
+      Utils.ODS(loginxml);
 
       var wc = new WebClient();
       wc.Headers["User-Agent"] = conf_.UserAgent;
@@ -153,23 +143,9 @@ namespace OperaLink
       OperaLink.Utils.ODS(string.Format("{0}:{1}", "token", token_));
       OperaLink.Utils.ODS(string.Format("{0}:{1}", "message", msg));
       OperaLink.Utils.ODS(string.Format("{0}:{1}", "code", code));
-      return (code == 200);
+      return code == 200;
     }
 
-    /* <?xml version="1.0" encoding="utf-8"?>
-     * <link user="', $user, '" password="', $pass, '" syncstate="', $state ,'" dirty="0" version="1.0" xmlns="http://xmlns.opera.com/2006/link">
-     * <clientinfo>
-     * <supports>bookmark</supports>
-     * <supports>speeddial</supports>
-     * <supports>note</supports>
-     * <supports target="desktop">search_engine</supports>
-     * <supports>typed_history</supports>
-     * <build>3315</build>
-     * <system>win32</system>
-     * </clientinfo>
-     * <data/>
-     * </link>
-     */
     private string createLinkXml()
     {
       var x = "";
@@ -224,7 +200,7 @@ namespace OperaLink
         }
       }
       var lxml = createLinkXml();
-      OperaLink.Utils.ODS(lxml);
+      Utils.ODS(lxml);
       var wc = new WebClient(); ;
       wc.Headers["User-Agent"] = conf_.UserAgent;
       wc.UploadDataCompleted += new UploadDataCompletedEventHandler(uploadSyncXmlCompleted);
@@ -293,7 +269,7 @@ namespace OperaLink
       }
       catch (XmlException xex)
       {
-        OperaLink.Utils.ODS(xex.StackTrace);
+        Utils.ODS(string.Format("{0} {1}", xex.Message, xex.StackTrace));
       }
     }
 

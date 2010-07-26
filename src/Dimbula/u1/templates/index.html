@@ -20,7 +20,7 @@
       <input type="hidden" id="syncstate" name="syncstate" value="{{date.syncstate}}" />
       <button id="conf" value="config" onclick="setConfigs()">config</button>
     </form>
-    <p><button id="pullbtn" onclick="pullLinkData('{{data.pullkey}}')">{{data.pullkey}}</button></p>
+    <p><button id="pullbtn" onclick="pullLinkData('{{data.pullkey}}')">pull {{data.pullkey}}</button></p>
     <pre>{{data.inspect}}</pre>
   </body>
 </html>

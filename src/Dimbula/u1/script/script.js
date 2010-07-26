@@ -48,7 +48,7 @@ var client = new IOLIN.client( {
   ,'password':password
   ,'syncstate':syncstate
   ,'conf' : {} } );
-client.addManager( 'typed_hisotry', IOLIN.Data.TypedHistoryManager );
+client.addManager( 'typed_history', IOLIN.Data.TypedHistoryManager );
 client.addManager( 'speeddial',     IOLIN.Data.SpeedDialManager );
 client.addManager( 'search_engine', IOLIN.Data.SearchEngineManager );
 client.addManager( 'note',          IOLIN.Data.NoteManager );
@@ -88,7 +88,7 @@ function setPrivateIndexResponse( arg ) {
     ,'stylesheet'  : 'style.css'
     ,'username'    : username
     ,'password'    : password
-    ,'pullkey'     : 'bookmark'
+    ,'pullkey'     : ''
   };
   tmpl.parse( data );
   res.write( tmpl.html() );

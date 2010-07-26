@@ -211,7 +211,7 @@ var createViewHandlers = {
 };
 /**/
 function createOperaLinkView( raw ){
-  for( var key in createViewHanlders ) {
+  for( var key in createViewHandlers ) {
     if ( createViewHandlers.hasOwnProperty( key ) ){
       createViewHandlers[ key ]( raw );
     }
@@ -221,7 +221,7 @@ function createOperaLinkView( raw ){
 function pullLinkData( type ){
   var url = 'get/';
   var handler = null;
-  if ( !type ) {
+  if ( !type || type === '' ) {
     handler = createOperaLinkView;
   } else {
     url += type + '/';

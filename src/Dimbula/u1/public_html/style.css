@@ -1,0 +1,15 @@
+body {
+    margin: auto;
+    width: 90%;
+    padding: 20px 0;
+}
+div {
+    background: #eee;
+}
+#account dt, #account dd {
+    display:inline;
+}
+
+.debug {
+  display: block;
+}

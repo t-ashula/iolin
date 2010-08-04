@@ -88,19 +88,47 @@ var IDataView = function( o ) {
       div.removeChild( div.firstChild );
     }
     div.appendChild( N( 'h2', { 'class' : 'category' }, T( this.title_ ) ) );
-    var grid = N( 'table', { 'id': this.gridViewId_, 'class':'detail data' } );
+    // create control box
+    function minimize(ele){
+      ele.setAttribute(
+        'class',
+        ele.getAttribute('class').replace( /maximized/, 'minimized' ) ) ;
+    }
+    function maximize(ele){
+      ele.setAttribute(
+        'class',
+        ele.getAttribute('class').replace( /minimized/, 'maximized' ) ) ;
+    }
+    (function(){
+      var ce = function(e){
+        var t = e.target, pp = t.parentNode.parentNode;
+        switch ( t.getAttribute('class') ){
+          case 'minimize': minimize(pp.querySelector('.detail')); minimize(pp.querySelector('.raw')); break;
+          case 'maximize': maximize(pp.querySelector('.detail')); maximize(pp.querySelector('.raw')); break;
+          case 'close' : pp.style.height = 0; break;
+        }
+      };
+      var minibox = N('span',{'class':'minimize'}, T(' _ ') );
+      minibox.addEventListener('click', ce, false );
+      var maxbox = N('span',{'class':'maximize'}, T('[ ]') );
+      minibox.addEventListener('click', ce, false );
+      var closebox = N('span',{'class':'close'}, T(' X ') ) ;
+      minibox.addEventListener('click', ce, false );
+
+      var cbox = N('div', { 'class' : 'controlbox' }, minibox, maxbox, closebox );
+      div.appendChild( cbox );
+    }());
+    // create grid view
+    var data = JSON.parse( raw )[ this.key_ ];    
+    var grid = N( 'table', { 'id': this.gridViewId_, 'class':'detail data maximized' } );
     var heads = this.heads_;
     var keys = this.keys_;
     heads.forEach(
       function ( ele ) {
-        grid
-          .firstOrDefault( 'thead' )
-          .firstOrDefault( 'tr' )
-          .appendChild( N( 'th', {}, T( ele ) ) );
+        grid.firstOrDefault( 'thead' ).firstOrDefault( 'tr' ).appendChild( N( 'th', {}, T( ele ) ) );
       }
     );
     try {
-      var data = JSON.parse( raw )[ this.key_ ];
       data.forEach(
         function( ele ) {
           var row = N( 'tr' );
@@ -117,7 +145,9 @@ var IDataView = function( o ) {
       alert( this.title_ + ' json parse error.' + x + '\n' + raw );
     }
     div.appendChild( grid );
-    div.appendChild( N( 'textarea', { 'id' : this.rawViewId_, 'class' : 'raw data' }, T( JSON.stringify( data ) ) ) );
+    // create raw view
+    div.appendChild( N( 'textarea', { 'id' : this.rawViewId_, 'class' : 'raw data maximized' }, T( JSON.stringify( data ) ) ) );
+    // create pull button
     var btn = N( 'button', { 'id': this.pullId_ }, T( 'Pull ' + this.title_ ) );
     var key = this.key_;
     btn.addEventListener( 'click', function(e){ pullLinkData( key ); }, false );
@@ -240,13 +270,40 @@ function pullLinkData( type ){
   };
   xhr.send( null );  
 }
-
+/*
+  <div id="configform">
+  <dl id="account">
+  <dt><label for="username">username</label></dt>
+  <dd><input type="text" id="username" name="username" value="{{data.username}}" /></dd>
+  <dt><label for="password">password</label></dt>
+  <dd><input type="password" id="password" name="password" value="{{data.password}}" /></dd></dl>
+  <input type="hidden" id="syncstate" name="syncstate" value="{{date.syncstate}}" />
+  <button id="conf" value="config" onclick="setConfigs()">config</button>
+  </div>
+*/
 function createConfigForm(){
   var div = $( 'configs' );
   if ( !div ){
     div = N( 'div', { 'id' : 'configs' } );
     _D.body.appendChild( div );
   }
+  while ( div.firstChild ) {
+    div.removeChild( div.firstChild );
+  }
+  div.appendChild(
+    N( 'dl', { 'id' : 'account'},
+      N( 'dt',{}, N( 'label', { 'for'  : 'username' }, T( 'username' ) ) ),
+      N( 'dd',{}, N( 'input', { 'type' : 'text', 'id' : 'username' } ) ),
+      N( 'dt',{}, N( 'label', { 'for'  : 'password' }, T( 'password' ) ) ),
+      N( 'dd',{}, N( 'input', { 'type' : 'password', 'id' : 'password' } ) ) ) );
+  div.appendChild(
+    N( 'input', { 'type' : 'hidden', 'id' : 'syncstate' } ) );
+  
+  var btn = N( 'button', { 'id' : 'conf', 'value' : 'config' }, T( 'config' ) ) ;
+  btn.addEventListener('click', function(e){ setConfigs(); }, false );
+  div.appendChild( btn );
+  div.querySelector('#username').value = acc.username;
+  div.querySelector('#password').value = acc.password;
   return div;
 }
 

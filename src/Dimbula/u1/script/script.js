@@ -4,8 +4,9 @@
 
 /// global
 var _O = opera;
-var _S = opera.io.webserver;
-var _W = widget;
+var _S = _O.io.webserver;
+var _w = widget;
+var _W = window;
 
 if ( ! Array.prototype.last ) {
   Array.prototype.last = function() {
@@ -15,7 +16,7 @@ if ( ! Array.prototype.last ) {
 }
 
 /// utils
-var inspect=function( o, s ) {
+var _I = function( o, s ) {
   for( var i in o ){
     s += i + ":" + o[ i ] + ";\n";
   }
@@ -33,10 +34,10 @@ function args( ev ) {
 // setPreferenceForKey
 // preferenceForKey
 function GlobalPreference( key ) {
-  return unescape( window.localStorage.getItem( key ) );
+  return unescape( _W.localStorage.getItem( key ) );
 }
 function setGlobalPreference( key, val ) {
-  window.localStorage.setItem( key, escape( val ) );
+  _W.localStorage.setItem( key, escape( val ) );
 }
 
 /// application
@@ -84,7 +85,7 @@ function setPrivateIndexResponse( arg ) {
   var data = {
     'title'       : 'Opera Link On Opera Unite'
     ,'servicePath' : _S.currentServicePath
-    ,'inspect'     : '' //inspect( , "Widget\n" )
+    ,'inspect'     : _I( _W.localStorage, "opera\n" )
     ,'stylesheet'  : 'style.css'
     ,'username'    : username
     ,'password'    : password
@@ -136,7 +137,7 @@ function catchOtherRequest( ev ) {
   var data = {
     'title'       : 'Opera Link On Opera Unite'
     ,'servicePath' : _S.currentServicePath
-    ,'inspect'     : inspect( req, "Request\n" )
+    ,'inspect'     : _I( req, "Request\n" )
     ,'stylesheet'  : 'style.css'
     ,'username'    : username
     ,'password'    : password

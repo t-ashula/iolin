@@ -108,7 +108,7 @@ namespace SyncDataTests
         },
         State = SyncState.Added
       };
-      string d = lt.ToW3cDtfInUtc();
+      string d = lt.ToW3CDTFInUtc();
       string expected = "<typed_history status=\"added\" content=\"foo bar &amp;&lt;>&quot;'\" type=\"text\"><last_typed>" + d + "</last_typed></typed_history>";
       string actual;
       actual = target.ToOperaLinkXml();
@@ -180,7 +180,11 @@ namespace SyncDataTests
       target.FromOperaLinkXml(xmlString);
       Assert.AreEqual(SyncState.Added, target.State);
       Assert.AreEqual("ashula.info", target.Content.Content);
+<<<<<<< HEAD
       Assert.AreEqual("2010-04-14T18:22:42Z", target.Content.LastTyped.ToW3cDtfInUtc());
+=======
+      Assert.AreEqual("2010-04-14T18:22:42Z", target.Content.LastTyped.ToW3CDTFInUtc());
+>>>>>>> adc8b8bbf751bd573a6890289b283baf468bbeb4
     }
   }
 }

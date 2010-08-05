@@ -1,0 +1,30 @@
+body {
+    margin: auto;
+    width: 90%;
+    padding: 20px 0;
+}
+div {
+}
+
+.debug {
+    background: #eee;
+    display: block;
+}
+
+/* app */
+.controlbox {
+    float: right;
+    height: 1em;
+    font-family: monospace;
+}
+.minimized{
+    display: none;
+}
+.maximized{
+    display: block;
+}
+
+/* config */
+#account dt, #account dd {
+    display:inline;
+}

@@ -88,7 +88,7 @@ function setPrivateIndexResponse( arg ) {
     ,'stylesheet'  : 'style.css'
     ,'username'    : username
     ,'password'    : password
-    ,'pullkey'     : 'bookmark'
+    ,'pullkey'     : 'search_engine'
   };
   tmpl.parse( data );
   res.write( tmpl.html() );

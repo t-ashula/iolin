@@ -18,7 +18,7 @@
         <dd>
           <input type="password" id="password" name="password" value="{{data.password}}" /></dd></dl>
       <input type="hidden" id="syncstate" name="syncstate" value="{{date.syncstate}}" />
-      <button id="conf" value="config" onclick="set_configs()">config</button>
+      <button id="conf" value="config" onclick="setConfigs()">config</button>
     </form>
     <p><button id="pullbtn" onclick="pullLinkData('{{data.pullkey}}')">{{data.pullkey}}</button></p>
     <pre>{{data.inspect}}</pre>

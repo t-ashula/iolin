@@ -10,6 +10,22 @@ namespace OperaLink.Forms
       : base(c, "Bookmark")
     {
       InitializeComponent();
+<<<<<<< HEAD
+      Dock = DockStyle.Fill;
+    }
+
+    public override void UpdateSyncItems()
+    {
+      var items = client_.Bookmarks;
+      System.Diagnostics.Debug.WriteLine(items.Count());
+      BookmarkList.Items.Clear();
+      BookmarkList.Items.AddRange(
+        items.Select(i => new ListViewItem(new string[] {
+          i.Type.ToString(),
+          (i.Created != null)? i.Created.ToW3CDTFInUtc() : "",
+          i.Title,   
+          (i.Uri != null)? i.Uri.ToString() : "",
+=======
       InitViews();
 
       Dock = DockStyle.Fill;
@@ -45,6 +61,7 @@ namespace OperaLink.Forms
           string.IsNullOrEmpty(i.Title) ? "" : i.Title,
           string.IsNullOrEmpty(i.NickName)? "" :i.NickName,
           string.IsNullOrEmpty(i.Uri)? "" : i.Uri.ToString(),
+>>>>>>> adc8b8bbf751bd573a6890289b283baf468bbeb4
         })).ToArray());
     }
   }

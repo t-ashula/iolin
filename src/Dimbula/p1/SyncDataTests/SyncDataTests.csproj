@@ -73,7 +73,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
+    <Shadow Include="テストの参照\p1.accessor" />
+=======
     <Content Include="ReferencesForTest\p1.accessor" />
+>>>>>>> adc8b8bbf751bd573a6890289b283baf468bbeb4
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

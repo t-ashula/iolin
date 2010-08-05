@@ -1,11 +1,19 @@
+<<<<<<< HEAD
+using System;
+=======
 ﻿using System;
+>>>>>>> adc8b8bbf751bd573a6890289b283baf468bbeb4
 using System.Xml;
 
 namespace OperaLink
 {
   public class Configs
   {
+<<<<<<< HEAD
+    private readonly string DEFAULT_USERAGENT_STRING = "Opera/9.80 (Windows NT 6.1; U; en) Presto/2.5.27 Version/10.60";
+=======
     private readonly string DEFAULT_USERAGENT_STRING = "Opera/9.80 (Windows NT 6.1; U; en) Presto/2.6.30 Version/10.60";
+>>>>>>> adc8b8bbf751bd573a6890289b283baf468bbeb4
     public enum DeviceTypes
     {
       desktop,
@@ -36,7 +44,11 @@ namespace OperaLink
       SyncSpeedDial = true;
       SyncTypedHistory = true;
       SystemName = "win32";
+<<<<<<< HEAD
+      BuildNumber = 3400;
+=======
       BuildNumber = 3445;
+>>>>>>> adc8b8bbf751bd573a6890289b283baf468bbeb4
       DeviceType = DeviceTypes.desktop;
     }
   }

@@ -17,6 +17,9 @@ div {
     height: 1em;
     font-family: monospace;
 }
+.titlebar {
+    float: left;
+}
 .minimized{
     display: none;
 }

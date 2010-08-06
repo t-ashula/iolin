@@ -6,6 +6,7 @@
 var _D = document;
 var _O = opera;
 var _L = location;
+var _W = window;
 
 /// Extends
 if ( !Array.prototype.aggregate ){
@@ -65,6 +66,19 @@ function currentServicePath(){
 }
 
 /// GUI
+if ( ! dimbula ){
+  var dimbula = {};
+}
+if ( !dimbula.ui ) {
+  dimbula.ui = {};
+}
+(function(){
+  var _F = function(){};
+  _F.prototype._title = "";
+  _F.prototype.title = function(t){ return ( t ) ? ( this._title = t ) : this._title; };
+  dimbula.ui.forms = _F;
+}(_W));
+
 var ListView = function(){};
 
 /// application
@@ -79,6 +93,7 @@ var IDataView = function( o ) {
     this.pullId_ = this.id_ + '_pull';
     this.heads_ = this.cols_.map( function(c){ return c.h; } );
     this.keys_ = this.cols_.map( function(c){ return { 'key' : c.k, 'toStr' : c.toStr }; } );
+    var self = this;
     var div = $( this.id_ );
     if ( !div ) {
       div = N( 'div', { 'id' : this.id_ } );      
@@ -87,8 +102,8 @@ var IDataView = function( o ) {
     while ( div.firstChild ) {
       div.removeChild( div.firstChild );
     }
-    div.appendChild( N( 'h2', { 'class' : 'category' }, T( this.title_ ) ) );
     // create control box
+    div.appendChild( N('h2', {'class':'titlebar'}, self.title_ ) );
     function minimize(ele){
       ele.setAttribute(
         'class',
@@ -108,14 +123,15 @@ var IDataView = function( o ) {
           case 'close' : pp.style.height = 0; break;
         }
       };
-      var minibox = N('span',{'class':'minimize'}, T(' _ ') );
-      minibox.addEventListener('click', ce, false );
-      var maxbox = N('span',{'class':'maximize'}, T('[ ]') );
-      minibox.addEventListener('click', ce, false );
-      var closebox = N('span',{'class':'close'}, T(' X ') ) ;
-      minibox.addEventListener('click', ce, false );
-
-      var cbox = N('div', { 'class' : 'controlbox' }, minibox, maxbox, closebox );
+      
+      var cbox = N('div', { 'class' : 'controlbox' } );
+      [{ c : 'minimize', t : '_'},{ c : 'maximize', t : '[]'},{ c : 'close', t : 'X' } ].forEach(
+        function(o){
+          var cb = N( 'span', { 'class' : o.c }, T( o.t ) );
+          cb.addEventListener('click', ce, false );
+          cbox.appendChild( cb );
+        }
+      );
       div.appendChild( cbox );
     }());
     // create grid view
@@ -270,17 +286,7 @@ function pullLinkData( type ){
   };
   xhr.send( null );  
 }
-/*
-  <div id="configform">
-  <dl id="account">
-  <dt><label for="username">username</label></dt>
-  <dd><input type="text" id="username" name="username" value="{{data.username}}" /></dd>
-  <dt><label for="password">password</label></dt>
-  <dd><input type="password" id="password" name="password" value="{{data.password}}" /></dd></dl>
-  <input type="hidden" id="syncstate" name="syncstate" value="{{date.syncstate}}" />
-  <button id="conf" value="config" onclick="setConfigs()">config</button>
-  </div>
-*/
+
 function createConfigForm(){
   var div = $( 'configs' );
   if ( !div ){
@@ -318,6 +324,7 @@ function setConfigs(){
     console.log( xhr );
     if ( xhr.readyState === 4 ) {
       if ( xhr.status === 200 ) {
+        acc = { username : u, password : p };        
         createConfigForm();
       }
     }

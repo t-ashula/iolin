@@ -4,6 +4,7 @@ body {
     padding: 20px 0;
 }
 div {
+    outline: 1px solid green;
 }
 
 .debug {
@@ -11,7 +12,7 @@ div {
     display: block;
 }
 
-/* app */
+/* app *
 .controlbox {
     float: right;
     height: 1em;

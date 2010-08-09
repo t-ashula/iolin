@@ -8,12 +8,12 @@
     <link rel="stylesheet" type="text/css" href="{{data.servicePath}}style.css" />
     <script type="text/javascript">
       //<![CDATA[
-      var acc = { 'username':'{{data.username}}', 'password':'{{data.password}}' }; 
+      var acc = { 'username' : '{{data.username}}', 'password' : '{{data.password}}', 'syncstate' : '{{data.syncstate}}' }; 
       //]]>
     </script>
     <script type="text/javascript" src="{{data.servicePath}}link.js"></script>
   </head>
-  <body onload="createConfigForm()">
+  <body>
     <p><button id="pullbtn" onclick="pullLinkData('{{data.pullkey}}')">pull {{data.pullkey}}</button></p>
     <pre class="debug">{{data.inspect}}</pre>
   </body>

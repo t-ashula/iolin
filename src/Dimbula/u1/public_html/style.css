@@ -32,3 +32,15 @@ div {
 #account dt, #account dd {
     display:inline;
 }
+
+/* gridview */
+table.grid {
+    boder-collapse : collapse;
+}
+table.grid td {
+    border : 1px solid #333;
+}
+table.grid tr:nth-child(even) {
+    background-color: #ccc;
+}
+

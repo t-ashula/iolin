@@ -45,11 +45,15 @@ if ( !IOLIN.forms ){
   (function(I){
     var _F = function( id, title ){
       this.id_ = 'F_' + id ;
-      this.title_ = title;
+      this.title = title;
       this.div = null;
       this.init();
     };
-    _F.prototype.title = function(t){ return ( t ) ? ( this._title = t ) : this._title; };
+    _F.prototype.clean = function(){
+      if ( this.div ) {
+        this.div.querySelector('.mainpanel').innerHTML = "";
+      }
+    };
     _F.prototype.init = function(){
       function minimize( ele ){
         ele.setAttribute(
@@ -86,7 +90,7 @@ if ( !IOLIN.forms ){
             cbox.appendChild( cb );
           }
         );
-        f.appendChild( N( 'h2', { 'class' : 'titlebar' }, T( this.title_ ) ) );
+        f.appendChild( N( 'h2', { 'class' : 'titlebar' }, T( this.title ) ) );
         f.appendChild( cbox );
         f.appendChild( N( 'div', { 'class' : 'mainpanel' } ) );
       }
@@ -96,7 +100,7 @@ if ( !IOLIN.forms ){
       this.div.querySelector( '.mainpanel' ).appendChild( ele );
     };
     I.forms = _F;
-  })(IOLIN);  
+  })(IOLIN);
 }
 
 function errmsg(){

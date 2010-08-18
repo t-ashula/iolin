@@ -35,9 +35,9 @@ div {
 
 /* gridview */
 table.grid {
-    boder-collapse : collapse;
+    border-collapse : collapse;
 }
-table.grid td {
+table.grid td, table.grid th {
     border : 1px solid #333;
 }
 table.grid tr:nth-child(even) {

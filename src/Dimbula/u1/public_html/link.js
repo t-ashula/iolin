@@ -117,6 +117,7 @@ _W.addEventListener(
     createConfigForm();
     createDataForms();
     createDebugForm();
+    pullLinkData();
   },
   false
 );

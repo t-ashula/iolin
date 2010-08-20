@@ -9,6 +9,17 @@ if ( !_L ){ var _L = location; }
 if ( !_W ){ var _W = window; }
 
 /// application
+  'urlfilter' : new IDataView({
+    'id'    : 'uf'
+    ,'title' : 'Content Block Rule'
+    ,'key'   : 'urlfilter'
+    ,'cols'  : [
+       { 'h' : 'Status',  'k' : 'data_status', 'toStr' : null }
+      ,{ 'h' : 'Type',    'k' : 'type',        'toStr' : null }
+      ,{ 'h' : 'Content', 'k' : 'content',     'toStr' : null }
+    ]
+  })
+  ,'typed_history' : new IDataView({
 /**/
 function createOperaLinkView( raw ){
   for( var type in dataViewers ) {

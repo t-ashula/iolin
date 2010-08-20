@@ -54,6 +54,7 @@ client.addManager( 'speeddial',     IOLIN.Data.SpeedDialManager );
 client.addManager( 'search_engine', IOLIN.Data.SearchEngineManager );
 client.addManager( 'note',          IOLIN.Data.NoteManager );
 client.addManager( 'bookmark',      IOLIN.Data.BookmarkManager );
+client.addManager( 'urlfilter',     IOLIN.Data.UrlFilterManager );
 
 function showIndex( ev ){
   var arg = args( ev );

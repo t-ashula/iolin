@@ -75,7 +75,7 @@ if ( !dimbula.ui ) {
 (function(){
   var _F = function(){};
   _F.prototype._title = "";
-  _F.prototype.title = function(t){ return ( t ) ? ( this._title = t ) : this._title; };
+  _F.prototype.title = function( t ){ return ( t ) ? ( this._title = t ) : this._title; };
   dimbula.ui.forms = _F;
 }(_W));
 
@@ -103,7 +103,7 @@ var IDataView = function( o ) {
       div.removeChild( div.firstChild );
     }
     // create control box
-    div.appendChild( N('h2', {'class':'titlebar'}, self.title_ ) );
+    div.appendChild( N('h2', {'class':'titlebar'}, T( self.title_ ) ) );
     function minimize(ele){
       ele.setAttribute(
         'class',
@@ -173,7 +173,17 @@ var IDataView = function( o ) {
 };
 
 var createViewHandlers = {
-  'typed_history' : new IDataView({
+  'urlfilter' : new IDataView({
+    'id'    : 'uf'
+    ,'title' : 'Content Block Rule'
+    ,'key'   : 'urlfilter'
+    ,'cols'  : [
+       { 'h' : 'Status',  'k' : 'data_status', 'toStr' : null }
+      ,{ 'h' : 'Type',    'k' : 'type',        'toStr' : null }
+      ,{ 'h' : 'Content', 'k' : 'content',     'toStr' : null }
+    ]
+  })
+  ,'typed_history' : new IDataView({
     'id'    : 'th'
     ,'title' : 'Typed History'
     ,'key'   : 'typed_history'

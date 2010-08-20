@@ -49,22 +49,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BookmarkManagerTest.cs" />
-    <Compile Include="BookmarkWrapperTest.cs" />
-    <Compile Include="ExDateTimeTest.cs" />
-    <Compile Include="NoteManagerTest.cs" />
-    <Compile Include="NoteWrapperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SearchEngineManagerTest.cs" />
-    <Compile Include="SearchEngineWrapperTest.cs" />
-    <Compile Include="SpeedDialContentTest.cs" />
     <Compile Include="SpeedDialManagerTest.cs" />
     <Compile Include="TypedHistoryManagerTest.cs" />
     <Compile Include="TypedHistoryWrapperTest.cs" />
     <Compile Include="UtilsTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="AuthoringTests.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\p1.csproj">

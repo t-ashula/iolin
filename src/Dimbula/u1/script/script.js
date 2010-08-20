@@ -69,12 +69,13 @@ function showIndex( ev ){
 
 function setPublicIndexResponse( arg ) {
   var res = arg.res, req = arg.req;
-  res.setStatusCode( '403', 'forbidden' );
-  res.write( 
-    ['<title>403</title>'
-     ,'<p>forbidden</p>'
-     ,'<p><a href="http://admin.', req.host, _S.currentServicePath, '">Admin view</a></p>'
-    ].join('') );
+  var tmpl = new Markuper( 'templates/exchange.html' );
+  var data = {
+    'title'       : 'Opera Link On Opera Unite'
+    ,'servicePath' : _S.currentServicePath
+  };
+  tmpl.parse( data );
+  res.write( tmpl.html() );
   res.close(); 
 }
 
@@ -101,13 +102,23 @@ function getLinkData( ev ) {
   var arg = args( ev );
   var con = arg.con, req = arg.req, res = arg.res;
   var type = req.uri.split( '/' )[ 3 ];
-  var link = client.LinkData( type );
-  if ( link.response === 200 ){
-    setGlobalPreference( 'username', client.UserName() );
-    setGlobalPreference( 'password', client.PassWord() );
-    setGlobalPreference( 'syncstate', client.SyncState() );
+  if ( con.isOwner ) {
+    var link = client.LinkData( type );
+    if ( link.response === 200 ){
+      setGlobalPreference( 'username', client.UserName() );
+      setGlobalPreference( 'password', client.PassWord() );
+      setGlobalPreference( 'syncstate', client.SyncState() );
+    }
+    var s = JSON.stringify( link ) ;
+    var share = JSON.parse( s );
+    share.typed_history = [];
+    setGlobalPreference( 'shared', JSON.stringify( share ) );
+    res.write( s );
   }
-  res.write( JSON.stringify( link ) );
+  else{
+    var link = GlobalPreference( 'shared' );
+    res.write( link );
+  }
   res.close();
 }
 

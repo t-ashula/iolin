@@ -100,6 +100,7 @@ dataViewers[ 'typed_history' ] = new IDataView({
     return rich;
   }
 });
+
 dataViewers['speeddial'] = new IDataView( {
   'id'    : 'sd'
   ,'title' : 'Speed Dial'
@@ -170,3 +171,15 @@ dataViewers['bookmark'] = new IDataView( {
     ,{ 'h' : 'Prev',    'k' : 'previous',    'toStr' : null }
   ]
 });
+
+dataViewers['urlfilter' ] = new IDataView({
+  'id'    : 'uf'
+  ,'title' : 'Content Block Rule'
+  ,'key'   : 'urlfilter'
+  ,'cols'  : [
+    { 'h' : 'Status',  'k' : 'data_status', 'toStr' : null }
+    ,{ 'h' : 'Type',    'k' : 'type',        'toStr' : null }
+    ,{ 'h' : 'Content', 'k' : 'content',     'toStr' : null }
+  ]
+});
+

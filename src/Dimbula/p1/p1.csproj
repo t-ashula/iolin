@@ -145,11 +145,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-<<<<<<< HEAD
     <None Include="Properties\DataSources\Client.datasource" />
     <None Include="Properties\DataSources\Configs.datasource" />
-=======
->>>>>>> adc8b8bbf751bd573a6890289b283baf468bbeb4
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

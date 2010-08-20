@@ -1,15 +1,128 @@
+* {
+    margin:0;
+    padding:0;
+    font-size:100%;
+}
+
 body {
     margin: auto;
     width: 90%;
     padding: 20px 0;
 }
+
 div {
-    background: #eee;
 }
+
+.debug {
+    background: #eee;
+    display: none;
+}
+
+/* app */
+.controlbox {
+    float: right;
+    font-family: monospace;
+    width: auto;
+    background: blue;    
+}
+
+.titlebar {
+    float: left;
+    text-align: center;
+    width: 80%;
+    background: blue;    
+}
+
+.minimized{
+    display: none;
+}
+
+.maximized{
+    display: block;
+}
+
+.wform {
+    display: block;
+    border: 2px #999 solid;
+    margin: 5px;
+    padding: 1em;
+}
+
+.wform:after {
+    clear: both;
+    content: '';
+    width: 0;
+    height: 0;
+    display: block;
+}
+
+.mainpanel{
+    background: #fff;
+}
+
+.delkey{ 
+}
+/* config */
 #account dt, #account dd {
     display:inline;
 }
 
-.debug {
-  display: block;
+/* gridview */
+table.grid {
+    border-collapse : collapse;
 }
+table.grid td, table.grid th {
+    border : 1px solid #333;
+}
+table.grid tr:nth-child(even) {
+    background-color: #ccc;
+}
+
+/* urlfilter rich view */
+#F_uf .grid { display: none; }
+#F_uf .raw { display: none; }
+#F_uf .rich li{ list-style-type: none; }
+#F_uf .rich .ufdetail {
+    display:block;
+    margin: 2px;
+}
+#F_uf .rich .ufdetail .cb {
+    position: relative;
+    float: right;
+    right: 0;
+    top: 0;
+}
+#F_uf .rich .ufdetail .delkey {
+    display: none;
+}
+#F_uf .rich .ufexclude .ufdetail {
+    background: #ccffcc;
+}
+#F_uf .rich .ufinclude .ufdetail {
+    background: #ccccff;
+}
+
+/* typed_history rich view */
+#F_th .grid { display: none; }
+#F_th .raw { display: none; }
+#F_th .rich .thdetail {
+    display: block;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    float: left;
+    width: 100%;
+    overflow: auto; 
+}
+#F_th .rich .thdetail .cb{
+    position: relative;
+    float: right;
+    right: 0;
+    top: 0;
+}
+
+#F_th .rich .thcontent.selected { background: #cccccc; }
+#F_th .rich .thcontent.text     { background: #ccccff; }
+#F_th .rich .thcontent.search   { background: #ccffcc; }
+#F_th .rich .thcontent.nickname { background: #ffcccc; }
+#F_th .rich .thcontent .datetime{ font-size: 80%; color: #ccc; }
+#F_th .rich .thcontent .content { padding-left: 4em; }

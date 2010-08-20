@@ -24,10 +24,11 @@
   _C.prototype.CONFIG = {
     'supports' :  {
       'typed_history'  : true
-      ,'speeddial'     : true
-      ,'search_engine' : true
-      ,'note'          : true
-      ,'bookmark'      : true
+      ,'speeddial'     : false
+      ,'search_engine' : false
+      ,'note'          : false
+      ,'bookmark'      : false
+      ,'urlfilter'     : true
     }
   };
   _C.prototype.LINK_API = 'https://link-server.opera.com/pull';
@@ -157,8 +158,7 @@
         }
       };      
     };
-    var lxml = cl.createLinkXml();
-    xhr.send( lxml );
+    xhr.send( cl.createLinkXml() );
   };
 
   _C.prototype.managers_ = [

@@ -108,11 +108,7 @@ namespace SyncDataTests
         },
         State = SyncState.Added
       };
-<<<<<<< HEAD
-      string d = lt.ToW3cDtfInUtc();
-=======
       string d = lt.ToW3CDTFInUtc();
->>>>>>> adc8b8bbf751bd573a6890289b283baf468bbeb4
       string expected = "<typed_history status=\"added\" content=\"foo bar &amp;&lt;>&quot;'\" type=\"text\"><last_typed>" + d + "</last_typed></typed_history>";
       string actual;
       actual = target.ToOperaLinkXml();

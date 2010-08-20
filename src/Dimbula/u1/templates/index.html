@@ -1,26 +1,23 @@
 <!doctype html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
     <title>{{data.title}}</title>
-    <link rel="stylesheet" type="text/css" href="{{data.servicePath}}{{data.stylesheet}}">
+    <link rel="stylesheet" type="text/css" href="{{data.servicePath}}style.css" />
+    <script type="text/javascript">
+      //<![CDATA[
+      var acc = { 'username' : '{{data.username}}', 'password' : '{{data.password}}', 'syncstate' : '{{data.syncstate}}' }; 
+      //]]>
+    </script>
+    <script type="text/javascript" src="{{data.servicePath}}utils.js"></script>
+    <script type="text/javascript" src="{{data.servicePath}}forms.js"></script>
+    <script type="text/javascript" src="{{data.servicePath}}view.js"></script>
     <script type="text/javascript" src="{{data.servicePath}}link.js"></script>
   </head>
   <body>
-    <form id="configform" method="post">
-      <dl id="account">
-        <dt>
-          <label for="username">username</label></dt>
-        <dd>
-          <input type="text" id="username" name="username" value="{{data.username}}" /></dd>
-        <dt>
-          <label for="password">password</label></dt>
-        <dd>
-          <input type="password" id="password" name="password" value="{{data.password}}" /></dd></dl>
-      <input type="hidden" id="syncstate" name="syncstate" value="{{date.syncstate}}" />
-      <button id="conf" value="config" onclick="set_configs()">config</button>
-    </form>
-    <p><button id="pullbtn" onclick="pullLinkData('{{data.pullkey}}')">{{data.pullkey}}</button></p>
-    <pre>{{data.inspect}}</pre>
+    <p><button id="pullbtn" onclick="pullLinkData('{{data.pullkey}}')">pull {{data.pullkey}}</button></p>
+    <pre class="debug">{{data.inspect}}</pre>
   </body>
 </html>

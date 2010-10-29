@@ -24,9 +24,7 @@
   var _SEDW = function(){};
 
   _SEDW.prototype = new I.Data.Wrapper();
-
-  _SEDW.prototype.createContent = _SED;
-  
+  _SEDW.prototype.createContent = _SED;  
   _SEDW.prototype.IsSameContent = function( other ){
     return this.Content.uuid === other.Content.uuid;
   };
@@ -51,9 +49,7 @@
   };
 
   _SEDW.prototype.ToOperaLinkXml = function(){
-    var self = this;
-    var s = self.Status;
-    var c = self.Content;
+    var self = this, s = self.Status, c = self.Content;
     return [
       '<search_engine'
       , ' status="', s, '"'
@@ -77,7 +73,6 @@
     ].join( '' );
   };
 
-  I.Data.SearchEngineManager = new I.Data.Manager(
-    'SearchEngine', [ 'search_engine' ], _SEDW );  
+  I.Data.SearchEngineManager = new I.Data.Manager( 'SearchEngine', [ 'search_engine' ], _SEDW );  
 }( IOLIN ));
 

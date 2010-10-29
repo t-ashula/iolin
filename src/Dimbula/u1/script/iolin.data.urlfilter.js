@@ -10,27 +10,24 @@
   };
   
   var _UFDW = function(){};
-
   _UFDW.prototype = new I.Data.Wrapper();
-
   _UFDW.prototype.createContent = _UFD;
-    
   _UFDW.prototype.IsSameContent = function( other ){
     return this.Content.id === other.Content.id;
   };
 
   _UFDW.prototype.ToOperaLinkXml = function(){
-    var self = this;
-    var s = self.Status, c = self.Content;
-    var cc = c[ 'content' ], t = c[ 'type' ], i = c[ 'id' ];
-    return [ '<urlfilter '
-             ,'status="', s, '" '
-             ,'id="', i, '" '
-             ,'type="', t, '" '
-             ,'>'
-             ,'<content>', cc, '</content>'
-             ,'</urlfilter>'
-           ].join( '' );
+    var self = this, s = self.Status, c = self.Content,
+      cc = c[ 'content' ], t = c[ 'type' ], i = c[ 'id' ];
+    return [
+      '<urlfilter '
+      ,'status="', s, '" '
+      ,'id="', i, '" '
+      ,'type="', t, '" '
+      ,'>'
+      ,'<content>', cc, '</content>'
+      ,'</urlfilter>'
+    ].join( '' );
   };
 
   _UFDW.prototype.ModContent = function( next ){
@@ -41,8 +38,7 @@
   };
 
   _UFDW.prototype.FromOperaLinkXml = function( ele ){
-    var self = this;
-    var status = ele.getAttribute( 'status' );
+    var self = this, status = ele.getAttribute( 'status' );
     self.Status = status;
     self.Content =
       new self.createContent(
@@ -52,7 +48,6 @@
           ele.getElementsByTagName( 'content' )[ 0 ].textContent : '' ) ;
   };
 
-  I.Data.UrlFilterManager = new I.Data.Manager(
-    'UrlFilter', ['urlfilter'], _UFDW );
+  I.Data.UrlFilterManager = new I.Data.Manager( 'UrlFilter', ['urlfilter'], _UFDW );
   
 })( IOLIN );

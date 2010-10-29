@@ -15,26 +15,18 @@
   };
   
   var _NNDW = function(){};
-
   _NNDW.prototype = new I.Data.Wrapper();
-
   _NNDW.prototype.createContent = _NND;
-    
   _NNDW.prototype.IsSameContent = function( other ){
     return this.Content.id === other.Content.id
       &&  this.Content.parent === other.Content.parent;
   };
 
   _NNDW.prototype.FromOperaLinkXml = function( ele ){
-    var self = this;
+    var self = this, tag = ele.tagName, ty = ele.getAttribute( 'type' );
+    ty = ( tag !== 'note_folder' ) ? 'note' :
+      ( !!ty && ty === 'trash' ) ? 'trash' : 'folder';
     self.Status = ele.getAttribute( 'status' );
-    var tag = ele.tagName;
-    var ty = ele.getAttribute( 'type' );
-    if ( tag === 'note_folder' ) {
-      ty = ( !!ty && ty === 'trash' ) ? 'trash' : 'folder';
-    } else {
-      ty = 'note';
-    }
     self.Content = new self.createContent({
       'id'        : ele.getAttribute( 'id' )
       ,'type'     : ty
@@ -48,11 +40,7 @@
   };
 
   _NNDW.prototype.ToOperaLinkXml = function(){
-    var self = this;
-    var s = self.Status, c = self.Content;
-    var t = c.type;
-    var ele = ( t === 'note' ) ? 'note' : 'note_folder';
-    var lxml = [];
+    var self = this, s = self.Status, c = self.Content, t = c.type, lxml = [];
     if ( t === 'note' ) {
       lxml = [
         '<note'
@@ -66,7 +54,8 @@
         ,'<uri>',       !!c.uri      ? c.uri     : '', '</uri>'
         ,'</note>'
       ];
-    } else {
+    }
+    else {
       lxml = [
         '<note_folder'
         ,' status="',   s, '"'
@@ -83,7 +72,6 @@
     return lxml.join( '' );
   };
 
-  I.Data.NoteManager = new I.Data.Manager(
-    'Notes', [ 'note', 'note_folder' ], _NNDW );
+  I.Data.NoteManager = new I.Data.Manager( 'Notes', [ 'note', 'note_folder' ], _NNDW );
   
 })( IOLIN );

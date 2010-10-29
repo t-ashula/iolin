@@ -19,26 +19,18 @@
   };
   
   var _BMDW = function(){};
-
   _BMDW.prototype = new I.Data.Wrapper();
-
   _BMDW.prototype.createContent = _BMD;
-    
   _BMDW.prototype.IsSameContent = function( other ){
     return this.Content.id === other.Content.id
       &&  this.Content.parent === other.Content.parent;
   };
 
   _BMDW.prototype.FromOperaLinkXml = function( ele ){
-    var self = this;
+    var self = this, tag = ele.tagName, ty = ele.getAttribute( 'type' );
+    ty = ( tag === 'bookmark_folder' ) ?
+      ( ( !!ty && ty === 'trash' ) ? 'trash' : 'folder' ) : 'item';
     self.Status = ele.getAttribute( 'status' );
-    var tag = ele.tagName;
-    if ( tag === 'bookmark_folder' ) {
-      var ty = ele.getAttribute( 'type' );
-      ty = ( !!ty && ty === 'trash' ) ? 'trash' : 'folder';
-    } else {
-      var ty = 'item';
-    }
     self.Content = new self.createContent({
       'id'                    : ele.getAttribute( 'id' )
       ,'type'                 : ty
@@ -56,10 +48,7 @@
   };
 
   _BMDW.prototype.ToOperaLinkXml = function(){
-    var self = this;
-    var s = self.Status, c = self.Content;
-    var t = c.type;
-    var lxml = [];
+    var self = this, s = self.Status, c = self.Content, t = c.type,  lxml = [];
     if ( t === 'bookmark' || t === 'separator' ) {
       lxml = [
         '<bookmark'
@@ -72,21 +61,14 @@
         ,'<uri>',       !!c.uri      ? c.uri     : '', '</uri>'
         ,'<title>',     !!c.content  ? c.content : '', '</title>'
         ,'<nickname>',     !!c.nickname  ? c.nickname : '', '</nickname>'
-        ,'<show_in_parsonal_bar>'
-        , !!c.show_in_personal_bar  ? c.show_in_personal_bar : ''
-        ,'</show_in_parsonal_bar>'
-        ,'<parsonal_bar_pos>'
-        , ( !!c.show_in_personal_bar && !!c.personal_bar_pos ) ? c.personal_bar_pos : '-1'
-        ,'</parsonal_bar_pos>'
-        ,'<show_in_panel>'
-        , !!c.show_in_panel ? c.show_in_penel : ''
-        ,'</show_in_panel>'
-        ,'<panel_pos>'
-        , ( !!c.show_in_panel && !!c.panel_pos ) ? c.panel_pos : '-1'
-        ,'</panel_pos>'        
+        ,'<show_in_parsonal_bar>', !!c.show_in_personal_bar  ? c.show_in_personal_bar : '', '</show_in_parsonal_bar>'
+        ,'<parsonal_bar_pos>', ( !!c.show_in_personal_bar && !!c.personal_bar_pos ) ? c.personal_bar_pos : '-1', '</parsonal_bar_pos>'
+        ,'<show_in_panel>', !!c.show_in_panel ? c.show_in_penel : '', '</show_in_panel>'
+        ,'<panel_pos>', ( !!c.show_in_panel && !!c.panel_pos ) ? c.panel_pos : '-1', '</panel_pos>'        
         ,'</bookmark>'
       ];
-    } else {
+    }
+    else {
       lxml = [
         '<bookmark_folder'
         ,' status="',   s, '"'
@@ -99,25 +81,16 @@
         ,'<uri>',       !!c.uri      ? c.uri     : '', '</uri>'
         ,'<title>',     !!c.content  ? c.content : '', '</title>'
         ,'<nickname>',     !!c.nickname  ? c.nickname : '', '</nickname>'
-        ,'<show_in_parsonal_bar>'
-        , !!c.show_in_personal_bar  ? c.show_in_personal_bar : ''
-        ,'</show_in_parsonal_bar>'
-        ,'<parsonal_bar_pos>'
-        , ( !!c.show_in_personal_bar && !!c.personal_bar_pos ) ? c.personal_bar_pos : '-1'
-        ,'</parsonal_bar_pos>'
-        ,'<show_in_panel>'
-        , !!c.show_in_panel ? c.show_in_penel : ''
-        ,'</show_in_panel>'
-        ,'<panel_pos>'
-        , ( !!c.show_in_panel && !!c.panel_pos ) ? c.panel_pos : '-1'
-        ,'</panel_pos>'        
+        ,'<show_in_parsonal_bar>', !!c.show_in_personal_bar  ? c.show_in_personal_bar : '', '</show_in_parsonal_bar>'
+        ,'<parsonal_bar_pos>', ( !!c.show_in_personal_bar && !!c.personal_bar_pos ) ? c.personal_bar_pos : '-1', '</parsonal_bar_pos>'
+        ,'<show_in_panel>', !!c.show_in_panel ? c.show_in_penel : '', '</show_in_panel>'
+        ,'<panel_pos>', ( !!c.show_in_panel && !!c.panel_pos ) ? c.panel_pos : '-1', '</panel_pos>'        
         ,'</bookmark_folder>'
       ];
     }
     return lxml.join( '' );
   };
 
-  I.Data.BookmarkManager = new I.Data.Manager(
-    'Bookmark', [ 'bookmark', 'bookmark_folder' ], _BMDW );
+  I.Data.BookmarkManager = new I.Data.Manager( 'Bookmark', [ 'bookmark', 'bookmark_folder' ], _BMDW );
   
 })( IOLIN );

@@ -19,22 +19,16 @@
   };
   
   var _SDDW = function(){};
-
   _SDDW.prototype = new I.Data.Wrapper();
-
   _SDDW.prototype.createContent = _SDD;
-  
   _SDDW.prototype.IsSameContent = function( other ){
     return this.Content.position === other.Content.position;
   };
 
   _SDDW.prototype.FromOperaLinkXml = function( ele ){
-    var self = this;
-    var pos = Number( ele.getAttribute( 'position' ) );
-    var title = fod( ele, 'title', '' );
-    var uri = fod( ele, 'uri', '' );
-    var icon = fod( ele, 'icon', '' );
-    var rel = undefined;
+    var self = this, pos = Number( ele.getAttribute( 'position' ) ),
+      title = fod( ele, 'title', '' ), uri = fod( ele, 'uri', '' ), icon = fod( ele, 'icon', '' ),
+      rel = void 0;
     if ( fod( ele, 'reload_enabled', '0' ) !== '1' )      {
       rel = {
         'expired'   : fod( ele, 'reload_only_if_expire', '0' ) === '1'
@@ -48,20 +42,18 @@
   };
 
   _SDDW.prototype.ToOperaLinkXml = function(){
-    var self = this;
-    var s = self.Status;
-    var c = self.Content;
-    return [ '<speeddial ', 'status="', s, '" ', 'position="', i.position, '" ', '>'
-             ,'<title>', c.title, '</title>'
-             ,'<uri>', c.uri, '</url>'
-             ,'<reload_enabled>', !!c.reload ? '1' : '0', '</reload_enabled>',
-             ,'<reload_only_if_expired>', !!c.expired ? '1' : '0', '</reload_only_if_expired>'
-             ,'<reload_interval>', !!c.interval ? c.interval : '-1', '</reload_interval>'
-             ,'</speeddial>'
-           ].join( '' );
+    var self = this, s = self.Status, c = self.Content;
+    return [
+      '<speeddial ', 'status="', s, '" ', 'position="', i.position, '" ', '>'
+      ,'<title>', c.title, '</title>'
+      ,'<uri>', c.uri, '</url>'
+      ,'<reload_enabled>', !!c.reload ? '1' : '0', '</reload_enabled>',
+      ,'<reload_only_if_expired>', !!c.expired ? '1' : '0', '</reload_only_if_expired>'
+      ,'<reload_interval>', !!c.interval ? c.interval : '-1', '</reload_interval>'
+      ,'</speeddial>'
+    ].join( '' );
   };
 
-  I.Data.SpeedDialManager = new I.Data.Manager(
-    'Speeddial', [ 'speeddial' ], _SDDW );  
+  I.Data.SpeedDialManager = new I.Data.Manager( 'Speeddial', [ 'speeddial' ], _SDDW );  
 }( IOLIN ));
 

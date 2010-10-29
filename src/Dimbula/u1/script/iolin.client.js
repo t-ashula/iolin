@@ -37,7 +37,9 @@
   _C.prototype.Platform    = function(){ return window.navigator.platform; };
   _C.prototype.BuildNumber = function(){ return window.opera.buildNumber(); };
   _C.prototype.UserName    = function( v ){
-    if ( !!v ) { this.username_ = v; }
+    if ( !!v ) {
+      this.username_ = v;
+    }
     return this.username_;
   };
   _C.prototype.PassWord    = function( v ){
@@ -60,7 +62,7 @@
     }
     if ( cl.lasterror_ === '' ) {
       if ( cl.isKnownDataType( type ) ) {
-        var obj = { 'response' : 200 };
+        var obj = { 'response' : '200' };
         obj[ type ] = cl.linkdata_[ type ] ;
         return obj;
       }
@@ -69,8 +71,7 @@
     return cl.lasterror_;
   };
   _C.prototype.init = function() {
-    var cl = this;
-    var s = cl.CONFIG[ 'supports' ];
+    var cl = this, s = cl.CONFIG[ 'supports' ];
     for ( var key in s ){
       if ( s.hasOwnProperty( key ) ) {
         cl.linkdata_[ key ] = [];
@@ -102,9 +103,8 @@
   };
   
   _C.prototype.createClientInfoXml = function() {
-    var cl = this;
-    var s = cl.conf_[ 'supports' ];
-    var sxml = [ '<clientinfo>' ];
+    var cl = this, s = cl.conf_[ 'supports' ],sxml = [];
+    sxml[ sxml.length ] = '<clientinfo>';
     for ( var t in s ){
       if ( s.hasOwnProperty( t ) ) {
         if ( s[ t ] ) {
@@ -143,8 +143,7 @@
   };
 
   _C.prototype.SyncLinkData = function(){
-    var cl = this;
-    var xhr = new XMLHttpRequest();
+    var cl = this, xhr = new XMLHttpRequest();
     cl.lasterror_ = '';
     xhr.open( 'POST', cl.LINK_API, false );
     xhr.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
@@ -165,21 +164,18 @@
   ];
 
   _C.prototype.addManager = function( k, mng ) {
-    var cl = this;
-    var idx = cl.managers_.indexOfPred( function( e ){ return e.k === k; } );
+    var cl = this, idx = cl.managers_.indexOfPred( function( e ){ return e.k === k; } );
     if ( idx < 0 ) {
       idx = cl.managers_.length;
     }
     cl.managers_[ idx ] = { 'k' : k, 'mng' : mng };
   };
   _C.prototype.parseLinkError = function( xml ) {
-    var cl = this;
-    var dom = new DOMParser().parseFromString( xml, "application/xml" );
+    var cl = this, dom = new DOMParser().parseFromString( xml, "application/xml" );
     cl.lasterror_ = JSON.stringify( dom );
   };
   _C.prototype.parseLinkData = function( xml ) {
-    var cl = this;
-    var dom = new DOMParser().parseFromString( xml, "application/xml" );
+    var cl = this, dom = new DOMParser().parseFromString( xml, "application/xml" );
     for ( var i = 0, mng; mng = cl.managers_[ i ]; ++i ) {
       mng.mng.FromOperaLinkXml( dom );
       cl.linkdata_[ mng.k ] = mng.mng.Items();
